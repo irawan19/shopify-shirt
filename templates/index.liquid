@@ -36,44 +36,62 @@
 
     {%- comment -%} New Arrivals Grid {%- endcomment -%}
     {%- assign products = collections.all.products | default: collections.first.products -%}
-    <div class="product-grid" style="display:grid; grid-template-columns:repeat(1,1fr); gap:24px; margin-bottom:120px;">
+    <div class="product-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:120px;">
 
       {%- if products != blank and products.size > 0 -%}
         {%- for product in products limit: 4 -%}
+          {%- assign on_sale = false -%}
+          {%- if product.compare_at_price > product.price and product.available -%}
+            {%- assign on_sale = true -%}
+          {%- endif -%}
           <a href="{{ product.url }}" class="product-card-ref" style="text-decoration:none; color:inherit; cursor:pointer; display:block;">
-            <div style="position:relative; aspect-ratio:3/4; background:#f7f5f4; margin-bottom:16px; overflow:hidden;">
+            <div class="product-card-ref__media" style="position:relative; aspect-ratio:4/5; background:#f7f5f4; margin-bottom:12px; overflow:hidden;">
               {%- if product.featured_media -%}
-                <img src="{{ product.featured_media | image_url: width: 800 }}"
-                  srcset="{{ product.featured_media | image_url: width: 400 }} 400w, {{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 800 }} 800w, {{ product.featured_media | image_url: width: 1000 }} 1000w"
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                <img src="{{ product.featured_media | image_url: width: 600 }}"
+                  srcset="{{ product.featured_media | image_url: width: 300 }} 300w, {{ product.featured_media | image_url: width: 450 }} 450w, {{ product.featured_media | image_url: width: 600 }} 600w"
+                  sizes="(min-width: 1024px) 23vw, (min-width: 640px) 48vw, 48vw"
                   alt="{{ product.featured_media.alt | default: product.title | escape }}"
                   loading="lazy"
                   style="width:100%; height:100%; object-fit:cover; transition:transform 0.7s ease;">
               {%- else -%}
                 <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
-                  <span style="color:#999; font-size:14px;">No image</span>
+                  <span style="color:#999; font-size:12px;">No image</span>
                 </div>
               {%- endif -%}
               {%- if product.tags contains 'New' or product.tags contains 'new' -%}
-                <div style="position:absolute; top:8px; left:8px; border:1px solid #000; padding:4px 8px; background:#fff; font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000;">NEW</div>
+                <div style="position:absolute; top:8px; left:8px; border:1px solid #000; padding:3px 6px; background:#fff; font-family:'Geist',sans-serif; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000;">NEW</div>
               {%- endif -%}
+              {%- if on_sale -%}
+                <div style="position:absolute; top:8px; right:8px; border:1px solid #000; padding:3px 6px; background:#000; font-family:'Geist',sans-serif; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#fff;">SALE</div>
+              {%- endif -%}
+              <div class="product-card-ref__overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0); display:flex; align-items:flex-end; justify-content:center; padding-bottom:16px; transition:background 0.3s ease;">
+                <span class="product-card-ref__cta" style="background:#fff; color:#000; padding:10px 20px; font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; opacity:0; transform:translateY(8px); transition:all 0.3s ease;">View Product</span>
+              </div>
             </div>
-            <h3 style="font-family:'EB Garamond',serif; font-size:20px; line-height:1.2; color:#000; margin:0 0 4px; font-weight:400;">{{ product.title | upcase }}</h3>
-            <p style="font-family:'Geist Mono',monospace; font-size:13px; line-height:1.4; letter-spacing:0.02em; color:#444748; margin:0;">{{ product.price | money }}{% if product.metafields.custom.material != blank %} / {{ product.metafields.custom.material | upcase }}{% endif %}</p>
+            <h3 class="product-card-ref__title" style="font-family:'EB Garamond',serif; font-size:16px; line-height:1.3; color:#000; margin:0 0 4px; font-weight:400; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">{{ product.title }}</h3>
+            <p style="font-family:'Geist Mono',monospace; font-size:11px; line-height:1.4; letter-spacing:0.02em; color:#444748; margin:0;">
+              {%- if on_sale -%}
+                <span style="text-decoration:line-through; color:#999;">{{ product.compare_at_price | money }}</span>
+                <span style="color:#000; font-weight:600;"> {{ product.price | money }}</span>
+              {%- else -%}
+                {{ product.price | money }}
+              {%- endif -%}
+              {%- if product.metafields.custom.material != blank -%} / {{ product.metafields.custom.material | upcase }}{%- endif -%}
+            </p>
           </a>
         {%- endfor -%}
       {%- else -%}
         {%- comment -%} Placeholder products saat store kosong {%- endcomment -%}
         {%- for i in (1..4) -%}
           <div class="product-card-ref" style="cursor:pointer;">
-            <div style="position:relative; aspect-ratio:3/4; background:#f7f5f4; margin-bottom:16px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-              <span style="font-family:'EB Garamond',serif; font-size:18px; color:#999;">Product {{ i }}</span>
+            <div style="position:relative; aspect-ratio:4/5; background:#f7f5f4; margin-bottom:12px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:'EB Garamond',serif; font-size:14px; color:#999;">Product {{ i }}</span>
               {%- if i == 1 -%}
-                <div style="position:absolute; top:8px; left:8px; border:1px solid #000; padding:4px 8px; background:#fff; font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000;">NEW</div>
+                <div style="position:absolute; top:8px; left:8px; border:1px solid #000; padding:3px 6px; background:#fff; font-family:'Geist',sans-serif; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000;">NEW</div>
               {%- endif -%}
             </div>
-            <h3 style="font-family:'EB Garamond',serif; font-size:20px; line-height:1.2; color:#000; margin:0 0 4px; font-weight:400;">SAMPLE TEE {{ i }}</h3>
-            <p style="font-family:'Geist Mono',monospace; font-size:13px; line-height:1.4; letter-spacing:0.02em; color:#444748; margin:0;">Rp249.000 / 100% ORGANIC COTTON</p>
+            <h3 style="font-family:'EB Garamond',serif; font-size:16px; line-height:1.3; color:#000; margin:0 0 4px; font-weight:400;">SAMPLE TEE {{ i }}</h3>
+            <p style="font-family:'Geist Mono',monospace; font-size:11px; line-height:1.4; letter-spacing:0.02em; color:#444748; margin:0;">Rp249.000 / 100% COTTON</p>
           </div>
         {%- endfor -%}
       {%- endif -%}
@@ -84,13 +102,26 @@
 </main>
 
 <style>
-  @media (min-width: 640px) {
-    .product-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  }
+  /* Mobile: 2 columns, Desktop: 4 columns */
   @media (min-width: 1024px) {
-    .product-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    .product-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 24px !important; }
   }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .product-grid { gap: 20px !important; }
+  }
+
+  /* Product card hover effects */
   .product-card-ref:hover img { transform: scale(1.05); }
+  .product-card-ref:hover .product-card-ref__overlay { background: rgba(0,0,0,0.25); }
+  .product-card-ref:hover .product-card-ref__cta { opacity: 1; transform: translateY(0); }
+  .product-card-ref:hover .product-card-ref__title { color: #444748; }
+
+  /* Desktop title size */
+  @media (min-width: 1024px) {
+    .product-card-ref__title { font-size: 18px !important; }
+  }
+
+  /* Hero responsive */
   @media (min-width: 768px) {
     .hero-section { height: 921px !important; }
     .hero-section > div:last-child > div { max-width: 80%; }
