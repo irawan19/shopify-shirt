@@ -66,7 +66,7 @@
   </section>
   {%- endif -%}
 
-  {%- comment -%} ============ NEW ARRIVALS ============ {%- endcomment -%}
+  {%- comment -%} ============ NEW ARRIVALS (newest 4, no duplicate with best sellers) ============ {%- endcomment -%}
   {%- assign all_products = collections.all.products | default: collections.first.products -%}
   {%- if all_products.size > 0 -%}
   <section style="padding: 0 20px 80px;">
@@ -87,8 +87,8 @@
   </section>
   {%- endif -%}
 
-  {%- comment -%} ============ BEST SELLERS ============ {%- endcomment -%}
-  {%- if all_products.size > 0 -%}
+  {%- comment -%} ============ BEST SELLERS (only if 5+ products, avoid duplicate) ============ {%- endcomment -%}
+  {%- if all_products.size > 4 -%}
   <section style="padding: 0 20px 80px; background: #fafafa;">
     <div style="padding: 80px 0 0;">
       <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
@@ -109,8 +109,8 @@
   </section>
   {%- endif -%}
 
-  {%- comment -%} ============ FEATURED COLLECTION ============ {%- endcomment -%}
-  {%- if all_products.size > 0 -%}
+  {%- comment -%} ============ ALL PRODUCTS (only if 5+ products, avoid duplicate with new arrivals) ============ {%- endcomment -%}
+  {%- if all_products.size > 4 -%}
   <section style="padding: 80px 20px;">
     <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
       <div>
