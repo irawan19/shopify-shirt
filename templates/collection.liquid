@@ -1,11 +1,11 @@
-{%- comment -%} FITRA SHOP collection page — sesuai reference. No schema (template file). {%- endcomment -%}
+{%- comment -%} Collection page — sesuai reference. No schema (template file). {%- endcomment -%}
 {%- paginate collection.products by 24 -%}
 <main class="collection-page" style="padding: 0;">
 
-  {%- comment -%} Collection Header — centered style {%- endcomment -%}
-  <header style="text-align:center; padding: 96px 20px; border-bottom:1px solid #000;">
-    <h1 style="font-family:'EB Garamond',serif; font-size:48px; line-height:1.1; color:#000; margin:0 0 16px; font-weight:400;">{{ collection.title | default: 'ALL T-SHIRTS' | upcase }}</h1>
-    <p style="font-family:'Geist',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#444748; margin:0;">
+  {%- comment -%} Collection Header {%- endcomment -%}
+  <header style="text-align:center; padding: 64px 20px; border-bottom:1px solid #e5e5e5;">
+    <h1 style="font-family:'EB Garamond',serif; font-size:36px; line-height:1.1; color:#000; margin:0 0 12px; font-weight:400;">{{ collection.title | default: 'ALL T-SHIRTS' | upcase }}</h1>
+    <p style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#444748; margin:0;">
       {%- if collection.description != blank -%}
         {{ collection.description | strip_html | truncatewords: 12 | upcase }}
       {%- else -%}
@@ -15,44 +15,42 @@
   </header>
 
   {%- comment -%} Filter / Sort Bar {%- endcomment -%}
-  <form method="get" action="{{ collection.url }}" style="padding:16px 20px; border-bottom:1px solid #000; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; background:#fff;">
+  <form method="get" action="{{ collection.url }}" style="padding:12px 20px; border-bottom:1px solid #e5e5e5; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; background:#fff;">
 
-    <div style="display:flex; flex-wrap:wrap; gap:24px; align-items:center;">
-      <span style="font-family:'Geist',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#444748;">FILTER:</span>
+    <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+      <span style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#444748;">FILTER:</span>
 
       {%- for filter in collection.filters -%}
-        <div style="position:relative; display:inline-block;">
-          <details style="position:relative;">
-            <summary style="font-family:'Geist',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000; cursor:pointer; list-style:none; display:flex; align-items:center; gap:4px;">
-              {{ filter.label | upcase }}
-              <span class="material-symbols-outlined" style="font-size:16px;">arrow_drop_down</span>
-            </summary>
-            <div style="position:absolute; top:100%; left:0; margin-top:8px; background:#fff; border:1px solid #000; min-width:140px; z-index:50; padding:8px 0;">
-              {%- case filter.type -%}
-                {%- when 'price_range' -%}
-                  <div style="padding:12px; display:flex; gap:8px; align-items:center;">
-                    <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" min="0" placeholder="Min" style="width:60px; border:1px solid #e5e5e5; padding:4px 8px; font-family:'Geist Mono',monospace; font-size:12px;">
-                    <span>&mdash;</span>
-                    <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" min="0" placeholder="Max" style="width:60px; border:1px solid #e5e5e5; padding:4px 8px; font-family:'Geist Mono',monospace; font-size:12px;">
-                  </div>
-                {%- else -%}
-                  {%- for value in filter.values -%}
-                    <label style="display:flex; align-items:center; gap:8px; padding:8px 12px; font-family:'Geist Mono',monospace; font-size:12px; color:#000; cursor:pointer; border-bottom:1px solid #e5e5e5;{% if value.count == 0 and value.active == false %} opacity:0.4;{% endif %}">
-                      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %} style="border:1px solid #000;">
-                      <span>{{ value.label | upcase }}</span>
-                      <span style="color:#999;">({{{ value.count }}})</span>
-                    </label>
-                  {%- endfor -%}
-              {%- endcase -%}
-            </div>
-          </details>
-        </div>
+        <details style="position:relative;">
+          <summary style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000; cursor:pointer; list-style:none; display:flex; align-items:center; gap:4px;">
+            {{ filter.label | upcase }}
+            <span class="material-symbols-outlined" style="font-size:14px;">arrow_drop_down</span>
+          </summary>
+          <div style="position:absolute; top:100%; left:0; margin-top:8px; background:#fff; border:1px solid #e5e5e5; min-width:140px; z-index:50; padding:4px 0; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <div style="padding:12px; display:flex; gap:8px; align-items:center;">
+                  <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" min="0" placeholder="Min" style="width:60px; border:1px solid #e5e5e5; padding:4px 8px; font-family:'Geist Mono',monospace; font-size:11px;">
+                  <span>&mdash;</span>
+                  <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" min="0" placeholder="Max" style="width:60px; border:1px solid #e5e5e5; padding:4px 8px; font-family:'Geist Mono',monospace; font-size:11px;">
+                </div>
+              {%- else -%}
+                {%- for value in filter.values -%}
+                  <label style="display:flex; align-items:center; gap:8px; padding:8px 12px; font-family:'Geist Mono',monospace; font-size:11px; color:#000; cursor:pointer; border-bottom:1px solid #f3f3f4;{% if value.count == 0 and value.active == false %} opacity:0.4;{% endif %}">
+                    <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                    <span>{{ value.label | upcase }}</span>
+                    <span style="color:#999; margin-left:auto;">({{ value.count }})</span>
+                  </label>
+                {%- endfor -%}
+            {%- endcase -%}
+          </div>
+        </details>
       {%- endfor -%}
     </div>
 
-    <div style="display:flex; align-items:center; gap:16px;">
-      <span style="font-family:'Geist',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#444748;">SORT BY:</span>
-      <select name="sort_by" style="font-family:'Geist',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; background:transparent; border:none; cursor:pointer; outline:none; appearance:none; padding-right:24px;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#444748;">SORT:</span>
+      <select name="sort_by" style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; background:transparent; border:none; cursor:pointer; outline:none; appearance:none; padding-right:20px;">
         {%- for option in collection.sort_options -%}
           <option value="{{ option.value }}" {% if option.value == collection.sort_by or option.value == collection.default_sort_by %}selected{% endif %}>{{ option.name | upcase }}</option>
         {%- endfor -%}
@@ -60,56 +58,38 @@
     </div>
   </form>
 
-  {%- comment -%} Product Grid — bordered 1px cells {%- endcomment -%}
-  <div class="collection-grid-products" style="display:grid; grid-template-columns:repeat(1,1fr); gap:0; border-bottom:1px solid #000;">
+  {%- comment -%} Product Grid {%- endcomment -%}
+  <div style="padding: 32px 20px;">
+    <div class="collection-grid-products" style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px;">
 
-    {%- if collection.products_count > 0 -%}
-      {%- for product in collection.products -%}
-        <a href="{{ product.url }}" class="collection-product-card" style="text-decoration:none; color:inherit; display:block; border-right:1px solid #000; border-bottom:1px solid #000; padding:24px;">
-          <div style="position:relative; aspect-ratio:3/4; background:#f7f5f4; margin-bottom:16px; overflow:hidden;">
-            {%- if product.featured_media -%}
-              <img src="{{ product.featured_media | image_url: width: 800 }}"
-                srcset="{{ product.featured_media | image_url: width: 400 }} 400w, {{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 800 }} 800w, {{ product.featured_media | image_url: width: 1000 }} 1000w"
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                alt="{{ product.featured_media.alt | default: product.title | escape }}"
-                loading="lazy"
-                style="width:100%; height:100%; object-fit:cover; transition:transform 0.7s ease;">
-            {%- else -%}
-              <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
-                <span style="color:#999; font-size:14px;">No image</span>
-              </div>
-            {%- endif -%}
-            {%- if product.tags contains 'New' or product.tags contains 'new' -%}
-              <div style="position:absolute; top:8px; left:8px; border:1px solid #000; padding:4px 8px; background:#fff; font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000;">NEW</div>
-            {%- endif -%}
-          </div>
-          <h3 style="font-family:'EB Garamond',serif; font-size:20px; line-height:1.2; color:#000; margin:0 0 4px; font-weight:400;">{{ product.title | upcase }}</h3>
-          <p style="font-family:'Geist Mono',monospace; font-size:13px; line-height:1.4; letter-spacing:0.02em; color:#444748; margin:0;">{{ product.price | money }}{% if product.metafields.custom.material != blank %} / {{ product.metafields.custom.material | upcase }}{% endif %}</p>
-        </a>
-      {%- endfor -%}
-    {%- else -%}
-      <div style="padding:96px 20px; text-align:center;">
-        <p style="font-family:'Geist Mono',monospace; font-size:14px; color:#444748;">No products found.</p>
-      </div>
-    {%- endif -%}
+      {%- if collection.products_count > 0 -%}
+        {%- for product in collection.products -%}
+          {% render 'product-card-inline', product: product %}
+        {%- endfor -%}
+      {%- else -%}
+        <div style="grid-column:1/-1; padding:96px 20px; text-align:center;">
+          <p style="font-family:'Geist Mono',monospace; font-size:13px; color:#444748;">No products found.</p>
+        </div>
+      {%- endif -%}
 
+    </div>
   </div>
 
   {%- comment -%} Pagination {%- endcomment -%}
   {%- if paginate.pages > 1 -%}
-    <nav style="padding:48px 20px; display:flex; justify-content:center; gap:16px; align-items:center;">
+    <nav style="padding:32px 20px 64px; display:flex; justify-content:center; gap:12px; align-items:center;">
       {%- if paginate.previous -%}
-        <a href="{{ paginate.previous.url }}" style="font-family:'Geist',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000; text-decoration:none; border-bottom:1px solid #000;">&larr; PREVIOUS</a>
+        <a href="{{ paginate.previous.url }}" style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000; text-decoration:none; border-bottom:1px solid #000; padding-bottom:2px;">&larr; PREV</a>
       {%- endif -%}
       {%- for part in paginate.parts -%}
         {%- if part.is_link -%}
-          <a href="{{ part.url }}" style="font-family:'Geist Mono',monospace; font-size:13px; color:#000; text-decoration:none;">{{ part.title }}</a>
+          <a href="{{ part.url }}" style="font-family:'Geist Mono',monospace; font-size:12px; color:#444748; text-decoration:none; padding:4px 8px;">{{ part.title }}</a>
         {%- else -%}
-          <span style="font-family:'Geist Mono',monospace; font-size:13px; color:#000; font-weight:700; border-bottom:2px solid #000;">{{ part.title }}</span>
+          <span style="font-family:'Geist Mono',monospace; font-size:12px; color:#000; font-weight:700; border-bottom:2px solid #000; padding:4px 8px;">{{ part.title }}</span>
         {%- endif -%}
       {%- endfor -%}
       {%- if paginate.next -%}
-        <a href="{{ paginate.next.url }}" style="font-family:'Geist',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000; text-decoration:none; border-bottom:1px solid #000;">NEXT &rarr;</a>
+        <a href="{{ paginate.next.url }}" style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000; text-decoration:none; border-bottom:1px solid #000; padding-bottom:2px;">NEXT &rarr;</a>
       {%- endif -%}
     </nav>
   {%- endif -%}
@@ -117,31 +97,20 @@
 </main>
 
 <style>
-  @media (min-width: 640px) {
-    .collection-grid-products { grid-template-columns: repeat(2, 1fr) !important; }
-  }
   @media (min-width: 1024px) {
-    .collection-grid-products { grid-template-columns: repeat(4, 1fr) !important; }
+    .collection-grid-products { grid-template-columns: repeat(4, 1fr) !important; gap: 24px !important; }
   }
-  .collection-product-card:hover img { transform: scale(1.05); }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .collection-grid-products { grid-template-columns: repeat(3, 1fr) !important; gap: 20px !important; }
+  }
   @media (min-width: 768px) {
-    .collection-page header { padding: 96px 64px !important; }
-    .collection-page form { padding: 16px 64px !important; }
-    .collection-product-card { padding: 24px !important; }
+    .collection-page header { padding: 80px 64px !important; }
+    .collection-page form { padding: 12px 64px !important; }
+    .collection-page > div:first-of-type { padding: 40px 64px !important; }
   }
-  /* Remove right border on last column items */
-  @media (min-width: 1024px) {
-    .collection-product-card:nth-child(4n) { border-right: none !important; }
-  }
-  @media (min-width: 640px) and (max-width: 1023px) {
-    .collection-product-card:nth-child(2n) { border-right: none !important; }
-  }
-  /* Auto-submit filter form */
-  [data-filter-form] input, [data-filter-form] select { }
 </style>
 
 <script>
-  // Auto-submit form on filter/sort change
   document.addEventListener('DOMContentLoaded', function() {
     var form = document.querySelector('form[action="{{ collection.url }}"]');
     if (!form) return;

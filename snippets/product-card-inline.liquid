@@ -1,0 +1,75 @@
+{%- comment -%}
+  Reusable product card with inline styles.
+  Usage: {% render 'product-card-inline', product: product %}
+{%- endcomment -%}
+{%- assign on_sale = false -%}
+{%- if product.compare_at_price > product.price and product.available -%}
+  {%- assign on_sale = true -%}
+{%- endif -%}
+{%- assign sold_out = false -%}
+{%- unless product.available -%}
+  {%- assign sold_out = true -%}
+{%- endunless -%}
+{%- assign second_image = product.media[1] -%}
+
+<a href="{{ product.url }}" class="pcard" style="text-decoration:none; color:inherit; display:block; background:#fff; transition:transform 0.3s ease;">
+  <div class="pcard__media" style="position:relative; aspect-ratio:1/1; background:#f7f5f4; overflow:hidden;">
+    {%- if product.featured_media -%}
+      <img class="pcard__img pcard__img--main"
+        src="{{ product.featured_media | image_url: width: 500 }}"
+        srcset="{{ product.featured_media | image_url: width: 250 }} 250w, {{ product.featured_media | image_url: width: 400 }} 400w, {{ product.featured_media | image_url: width: 500 }} 500w"
+        sizes="(min-width: 1024px) 23vw, (min-width: 640px) 48vw, 48vw"
+        alt="{{ product.featured_media.alt | default: product.title | escape }}"
+        loading="lazy"
+        style="width:100%; height:100%; object-fit:cover; transition:opacity 0.4s ease, transform 0.6s ease;">
+      {%- if second_image -%}
+        <img class="pcard__img pcard__img--hover"
+          src="{{ second_image | image_url: width: 500 }}"
+          alt="{{ second_image.alt | default: product.title | escape }}"
+          loading="lazy"
+          style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.4s ease;">
+      {%- endif -%}
+    {%- else -%}
+      <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+        <span style="color:#bbb; font-size:12px; font-family:'Geist Mono',monospace;">No image</span>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Badges {%- endcomment -%}
+    {%- if sold_out -%}
+      <span style="position:absolute; top:10px; left:10px; background:#000; color:#fff; padding:4px 10px; font-family:'Geist',sans-serif; font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">Sold Out</span>
+    {%- elsif on_sale -%}
+      <span style="position:absolute; top:10px; left:10px; background:#000; color:#fff; padding:4px 10px; font-family:'Geist',sans-serif; font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">Sale</span>
+    {%- elsif product.tags contains 'New' or product.tags contains 'new' -%}
+      <span style="position:absolute; top:10px; left:10px; background:#fff; color:#000; border:1px solid #000; padding:3px 9px; font-family:'Geist',sans-serif; font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">New</span>
+    {%- endif -%}
+
+    {%- comment -%} Hover quick-view bar {%- endcomment -%}
+    <div class="pcard__action" style="position:absolute; bottom:0; left:0; right:0; background:rgba(255,255,255,0.95); padding:10px; text-align:center; transform:translateY(100%); transition:transform 0.3s ease;">
+      <span style="font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000;">View Product →</span>
+    </div>
+  </div>
+
+  <div class="pcard__body" style="padding:12px 4px;">
+    <h3 class="pcard__title" style="font-family:'EB Garamond',serif; font-size:15px; line-height:1.35; color:#000; margin:0 0 4px; font-weight:400; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; min-height:40px;">{{ product.title }}</h3>
+    <p style="font-family:'Geist Mono',monospace; font-size:11px; line-height:1.4; letter-spacing:0.01em; color:#444748; margin:0;">
+      {%- if on_sale -%}
+        <span style="text-decoration:line-through; color:#999;">{{ product.compare_at_price | money }}</span>
+        <span style="color:#000; font-weight:600;"> {{ product.price | money }}</span>
+      {%- else -%}
+        <span style="color:#000;">{{ product.price | money }}</span>
+      {%- endif -%}
+    </p>
+  </div>
+</a>
+
+<style>
+  .pcard:hover { transform: translateY(-2px); }
+  .pcard:hover .pcard__img--main { opacity: 0; }
+  .pcard:hover .pcard__img--hover { opacity: 1; }
+  .pcard:hover .pcard__action { transform: translateY(0); }
+  .pcard:hover .pcard__title { color: #444748; }
+  {%- if second_image == blank -%}
+  .pcard:hover .pcard__img--main { opacity: 1; transform: scale(1.04); }
+  {%- endif -%}
+</style>
