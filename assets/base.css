@@ -1,6 +1,6 @@
 /* ============================================================
-   FITRA SHOP — Base stylesheet
-   Minimalist-futuristic outdoor T-shirt boutique
+   custom-theme — Base stylesheet
+   Premium minimalist black & white outdoor T-shirt boutique
    ============================================================ */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -409,3 +409,352 @@ details.accordion .accordion__body { padding-bottom: 20px; color: var(--color-mu
   color: var(--color-on-primary);
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   PREMIUM PRODUCT CARDS — clean black & white
+   ============================================================ */
+
+/* Card base */
+.pcard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Card media container */
+.pcard__media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+/* Images — both stacked, main on top */
+.pcard__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.5s ease;
+}
+
+.pcard__img--main {
+  opacity: 1;
+  z-index: 2;
+}
+.pcard__img--hover {
+  opacity: 0;
+  z-index: 1;
+}
+
+/* Hover: crossfade to second image if exists, else zoom main */
+.pcard:hover .pcard__img--main {
+  transform: scale(1.06);
+}
+.pcard[data-has-hover="true"]:hover .pcard__img--main {
+  opacity: 0;
+  transform: scale(1.06);
+}
+.pcard[data-has-hover="true"]:hover .pcard__img--hover {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+/* Subtle dark overlay on hover */
+.pcard__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 3;
+  transition: background 0.4s ease;
+  pointer-events: none;
+}
+.pcard:hover .pcard__media::after {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Hover action bar — slides up from bottom */
+.pcard__action {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 12px;
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 4;
+}
+.pcard:hover .pcard__action {
+  transform: translateY(0);
+}
+.pcard__action span {
+  font-family: "Geist", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+/* Card lift on hover */
+.pcard:hover {
+  transform: translateY(-4px);
+}
+
+/* Card body */
+.pcard__body {
+  padding: 14px 2px 4px;
+}
+.pcard__title {
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 15px;
+  line-height: 1.35;
+  color: #000;
+  margin: 0 0 4px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 40px;
+  transition: color 0.3s ease;
+}
+.pcard:hover .pcard__title {
+  color: #555;
+}
+
+.pcard__price {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: #000;
+  margin: 0;
+}
+.pcard__price--old {
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 4px;
+}
+
+/* Badges — minimal, premium */
+.pcard__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 4;
+  font-family: "Geist", sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+}
+.pcard__badge--new {
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+.pcard__badge--sale {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+}
+.pcard__badge--soldout {
+  background: #fff;
+  color: #999;
+  border: 1px solid #ccc;
+}
+
+/* ============================================================
+   CINEMATIC ANIMATIONS
+   ============================================================ */
+
+/* Fade up on scroll */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* Stagger children */
+.fade-up-stagger > * {
+  opacity: 0;
+  animation: fadeUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.fade-up-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.fade-up-stagger > *:nth-child(2) { animation-delay: 0.12s; }
+.fade-up-stagger > *:nth-child(3) { animation-delay: 0.19s; }
+.fade-up-stagger > *:nth-child(4) { animation-delay: 0.26s; }
+.fade-up-stagger > *:nth-child(5) { animation-delay: 0.33s; }
+.fade-up-stagger > *:nth-child(6) { animation-delay: 0.40s; }
+.fade-up-stagger > *:nth-child(7) { animation-delay: 0.47s; }
+.fade-up-stagger > *:nth-child(8) { animation-delay: 0.54s; }
+
+/* Hero cinematic entrance */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-fade-in > * {
+  animation: heroFadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.hero-fade-in > *:nth-child(1) { animation-delay: 0.2s; }
+.hero-fade-in > *:nth-child(2) { animation-delay: 0.4s; }
+.hero-fade-in > *:nth-child(3) { animation-delay: 0.6s; }
+
+/* Image reveal — clip path animation */
+@keyframes imageReveal {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.image-reveal {
+  animation: imageReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* Smooth link underline */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(1);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.link-underline:hover::after {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* Button cinematic hover */
+.btn-cinematic {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease;
+}
+.btn-cinematic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: -1;
+}
+.btn-cinematic:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Scroll-triggered reveal (JS adds .is-visible) */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 0.12s; }
+.reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 0.19s; }
+.reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 0.26s; }
+.reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 0.33s; }
+.reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 0.40s; }
+.reveal-stagger.is-visible > *:nth-child(7) { transition-delay: 0.47s; }
+.reveal-stagger.is-visible > *:nth-child(8) { transition-delay: 0.54s; }
+
+/* Premium grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+}
+@media (min-width: 1024px) {
+  .product-grid { grid-template-columns: repeat(4, 1fr); gap: 28px; }
+}
+
+/* Collection grid */
+.collection-grid-products {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .collection-grid-products { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+}
+@media (min-width: 1024px) {
+  .collection-grid-products { grid-template-columns: repeat(4, 1fr); gap: 28px; }
+}
+
+/* No image placeholder — elegant */
+.pcard__no-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);
+}
+.pcard__no-img span {
+  color: #ccc;
+  font-size: 11px;
+  font-family: "Geist Mono", monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

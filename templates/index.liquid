@@ -1,25 +1,25 @@
-{%- comment -%} Homepage — sesuai reference/fitra_shop_home. No schema (template file). {%- endcomment -%}
+{%- comment -%} Homepage — premium black & white, cinematic. No schema (template file). {%- endcomment -%}
 <main class="w-full" style="padding: 0;">
 
-  {%- comment -%} Campaign Hero {%- endcomment -%}
-  <section class="hero-section" style="position:relative; width:100%; height:70vh; min-height:500px; max-height:819px; border-bottom:1px solid #e5e5e5; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden;">
-    <div class="hero-section__media" style="position:absolute; inset:0; z-index:0; background:#f7f5f4; overflow:hidden;">
+  {%- comment -%} Campaign Hero — cinematic entrance {%- endcomment -%}
+  <section class="hero-section" style="position:relative; width:100%; height:70vh; min-height:520px; max-height:780px; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden; background:#0a0a0a;">
+    <div class="hero-section__media image-reveal" style="position:absolute; inset:0; z-index:0; overflow:hidden;">
       {%- if settings.hero_image != blank -%}
-        <img src="{{ settings.hero_image | image_url: width: 2400 }}" alt="Hero" style="width:100%; height:100%; object-fit:cover; object-position:center; filter:grayscale(0.15);">
+        <img src="{{ settings.hero_image | image_url: width: 2400 }}"
+          alt="Hero"
+          style="width:100%; height:100%; object-fit:cover; object-position:center; filter:grayscale(0.3) brightness(0.7);">
       {%- else -%}
-        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #e8e8e8 0%, #f7f5f4 100%);">
-          <span style="font-family:'EB Garamond',serif; font-size:18px; color:#999; letter-spacing:0.1em;">HERO IMAGE</span>
-        </div>
+        <div style="width:100%; height:100%; background:linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);"></div>
       {%- endif -%}
-      <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(249,249,249,0.85) 0%, rgba(249,249,249,0.2) 40%, transparent 70%);"></div>
+      <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 40%, transparent 70%);"></div>
     </div>
-    <div style="position:relative; z-index:10; width:100%; padding:0 20px 40px; box-sizing:border-box;">
+    <div class="hero-fade-in" style="position:relative; z-index:10; width:100%; padding:0 20px 48px; box-sizing:border-box;">
       <div style="max-width:640px;">
-        <p style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#000; margin:0 0 12px;">{{ shop.name | upcase }} / OUTDOOR T-SHIRTS</p>
-        <h1 style="font-family:'EB Garamond',serif; font-size:42px; line-height:1.05; color:#000; margin:0 0 24px; font-weight:400;">MADE TO EXPLORE</h1>
+        <p style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#fff; margin:0 0 16px; opacity:0.8;">{{ shop.name | upcase }} / OUTDOOR T-SHIRTS</p>
+        <h1 style="font-family:'EB Garamond',serif; font-size:44px; line-height:1.05; color:#fff; margin:0 0 28px; font-weight:400; letter-spacing:-0.01em;">MADE TO EXPLORE</h1>
         <div style="display:flex; flex-direction:row; gap:12px; flex-wrap:wrap;">
-          <a href="{{ routes.all_products_collection_url }}" style="background:#000; color:#fff; padding:14px 28px; font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:opacity 0.2s;">SHOP T-SHIRTS</a>
-          <a href="{{ routes.all_products_collection_url }}" style="background:transparent; color:#000; border:1px solid #000; padding:14px 28px; font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:background 0.2s;">EXPLORE COLLECTIONS</a>
+          <a href="{{ routes.all_products_collection_url }}" class="btn-cinematic" style="background:#fff; color:#000; padding:14px 32px; font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; display:inline-block;">SHOP T-SHIRTS</a>
+          <a href="{{ routes.all_products_collection_url }}" style="background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.4); padding:14px 32px; font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:border-color 0.3s ease, background 0.3s ease;" onmouseover="this.style.borderColor='#fff';this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.4)';this.style.background='transparent'">EXPLORE COLLECTIONS</a>
         </div>
       </div>
     </div>
@@ -29,14 +29,14 @@
   <div style="padding: 80px 20px;">
 
     {%- comment -%} New Arrivals Header {%- endcomment -%}
-    <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:32px;">
-      <h2 style="font-family:'EB Garamond',serif; font-size:28px; line-height:1.2; color:#000; margin:0; font-weight:400;">DROP 01 / 2026</h2>
-      <a href="{{ routes.all_products_collection_url }}" style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:#000; text-decoration:none; border-bottom:1px solid #000; transition:color 0.2s;">VIEW ALL</a>
+    <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
+      <h2 style="font-family:'EB Garamond',serif; font-size:28px; line-height:1.2; color:#000; margin:0; font-weight:400; letter-spacing:-0.01em;">DROP 01 / 2026</h2>
+      <a href="{{ routes.all_products_collection_url }}" class="link-underline" style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#000; text-decoration:none;">VIEW ALL</a>
     </div>
 
     {%- comment -%} New Arrivals Grid {%- endcomment -%}
     {%- assign products = collections.all.products | default: collections.first.products -%}
-    <div class="product-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:0;">
+    <div class="product-grid reveal-stagger">
 
       {%- if products != blank and products.size > 0 -%}
         {%- for product in products limit: 8 -%}
@@ -44,13 +44,13 @@
         {%- endfor -%}
       {%- else -%}
         {%- for i in (1..4) -%}
-          <div style="background:#fff;">
-            <div style="position:relative; aspect-ratio:1/1; background:#f7f5f4; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-              <span style="font-family:'EB Garamond',serif; font-size:14px; color:#999;">Product {{ i }}</span>
+          <div class="pcard">
+            <div class="pcard__media">
+              <div class="pcard__no-img"><span>Product {{ i }}</span></div>
             </div>
-            <div style="padding:12px 4px;">
-              <h3 style="font-family:'EB Garamond',serif; font-size:15px; color:#000; margin:0 0 4px; font-weight:400;">SAMPLE TEE {{ i }}</h3>
-              <p style="font-family:'Geist Mono',monospace; font-size:11px; color:#444748; margin:0;">Rp249.000</p>
+            <div class="pcard__body">
+              <h3 class="pcard__title">SAMPLE TEE {{ i }}</h3>
+              <p class="pcard__price">Rp249.000</p>
             </div>
           </div>
         {%- endfor -%}
@@ -62,16 +62,28 @@
 </main>
 
 <style>
-  @media (min-width: 1024px) {
-    .product-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 24px !important; }
-  }
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .product-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 20px !important; }
-  }
   @media (min-width: 768px) {
-    .hero-section { height: 921px !important; max-height: 921px !important; }
+    .hero-section { height: 780px !important; max-height: 780px !important; }
     .hero-section h1 { font-size: 64px !important; }
     .hero-section > div:last-child { padding: 0 64px 64px !important; }
     main > div:last-child { padding: 100px 64px !important; }
   }
 </style>
+
+<script>
+  // Scroll-triggered reveal animations
+  (function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(function(el) {
+      observer.observe(el);
+    });
+  })();
+</script>
