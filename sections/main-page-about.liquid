@@ -1,0 +1,132 @@
+{%- comment -%} About / FAQ / Contact combined page template {%- endcomment -%}
+<article class="page-about">
+  {%- comment -%} About hero (asymmetric 5/7) {%- endcomment -%}
+  <section class="about-hero page-padding">
+    <div class="about-hero__grid">
+      <div class="about-hero__text">
+        <h1 class="display-lg about-hero__title">{{ page.title | default: 'OUTDOOR T-SHIRTS FOR THE MODERN EXPLORER.' }}</h1>
+        {%- if section.settings.intro != blank -%}
+          <p class="body-lg text-muted about-hero__intro">{{ section.settings.intro }}</p>
+        {%- endif -%}
+        {%- if section.settings.specs != blank -%}
+          <p class="about-hero__specs mono-ui text-muted">{{ section.settings.specs | newline_to_br }}</p>
+        {%- endif -%}
+      </div>
+      <div class="about-hero__media">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 1600 }}"
+            srcset="{{ section.settings.image | image_url: width: 800 }} 800w, {{ section.settings.image | image_url: width: 1200 }} 1200w, {{ section.settings.image | image_url: width: 1600 }} 1600w"
+            sizes="(min-width: 768px) 58vw, 100vw"
+            alt="{{ section.settings.image_alt | default: page.title | escape }}" loading="lazy">
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: '' }}
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  {%- comment -%} Page body content (if any) {%- endcomment -%}
+  {%- if page.content != blank -%}
+    <section class="page-about__content page-padding">
+      <div class="rte">{{ page.content }}</div>
+    </section>
+  {%- endif -%}
+
+  {%- comment -%} FAQ accordion {%- endcomment -%}
+  {%- if section.blocks.size > 0 -%}
+    <section class="faq page-padding bg-interface">
+      <div class="faq__grid">
+        <div class="faq__head">
+          <h2 class="headline-xl">{{ section.settings.faq_heading | default: 'F.A.Q.' }}</h2>
+        </div>
+        <div class="faq__list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'faq_item' -%}
+              <details class="accordion faq__item" {{ block.shopify_attributes }}>
+                <summary>{{ block.settings.title | upcase }} {% render 'icon', name: 'add', class: 'accordion__icon' %}</summary>
+                <div class="accordion__body body-md">{{ block.settings.text }}</div>
+              </details>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+
+  {%- comment -%} Contact form {%- endcomment -%}
+  {%- if section.settings.show_contact -%}
+    <section class="contact page-padding">
+      <div class="contact__grid">
+        <div class="contact__head">
+          <h2 class="headline-xl">{{ section.settings.contact_heading | default: 'Contact' }}</h2>
+          {%- if section.settings.contact_text != blank -%}
+            <p class="body-md text-muted contact__text">{{ section.settings.contact_text }}</p>
+          {%- endif -%}
+          <div class="contact__details mono-ui text-muted">
+            {%- if settings.social_email != blank -%}<p>{{ settings.social_email | upcase }}</p>{%- endif -%}
+            {%- if section.settings.phone != blank -%}<p>{{ section.settings.phone }}</p>{%- endif -%}
+          </div>
+        </div>
+        <div class="contact__form-wrap">
+          {%- form 'contact', class: 'contact__form' -%}
+            {%- if form.posted_successfully? -%}
+              <p class="mono-ui text-coffee contact__success">{{ 'contact.form.success' | t }}</p>
+            {%- endif -%}
+            <div class="field-underline">
+              <input type="text" id="name" name="contact[name]" placeholder=" " required>
+              <label for="name">{{ 'contact.form.name' | t }}</label>
+            </div>
+            <div class="field-underline">
+              <input type="email" id="email" name="contact[email]" placeholder=" " required>
+              <label for="email">{{ 'contact.form.email' | t }}</label>
+            </div>
+            <div class="field-underline">
+              <textarea id="message" name="contact[body]" placeholder=" " rows="1" required></textarea>
+              <label for="message">{{ 'contact.form.message' | t }}</label>
+            </div>
+            <button type="submit" class="btn btn--primary">{{ 'contact.form.submit' | t | upcase }}</button>
+          {%- endform -%}
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+</article>
+
+{% schema %}
+{
+  "name": "About / FAQ / Contact",
+  "settings": [
+    { "type": "textarea", "id": "intro", "label": "Intro paragraph", "default": "We engineer technical apparel that rejects the rugged tropes of traditional outdoor gear. Our pieces are designed with architectural precision, utilizing advanced fabric technologies wrapped in a minimalist, gallery-worthy aesthetic." },
+    { "type": "textarea", "id": "specs", "label": "Specs list (one per line)", "default": "01. BREATHABILITY\n02. DURABILITY\n03. SILHOUETTE" },
+    { "type": "image_picker", "id": "image", "label": "About image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
+    { "type": "header", "content": "FAQ" },
+    { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "F.A.Q." },
+    { "type": "header", "content": "Contact" },
+    { "type": "checkbox", "id": "show_contact", "label": "Show contact form", "default": true },
+    { "type": "text", "id": "contact_heading", "label": "Contact heading", "default": "Contact" },
+    { "type": "textarea", "id": "contact_text", "label": "Contact text", "default": "For inquiries regarding collections, technical specifications, or wholesale partnerships, please complete the form." },
+    { "type": "text", "id": "phone", "label": "Phone number" }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Question", "default": "Shipping" },
+        { "type": "textarea", "id": "text", "label": "Answer", "default": "Complimentary express shipping on all domestic orders over $200." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About / FAQ / Contact",
+      "blocks": [
+        { "type": "faq_item", "settings": { "title": "Shipping", "text": "Complimentary express shipping on all domestic orders over $200. International shipping is calculated at checkout." } },
+        { "type": "faq_item", "settings": { "title": "Size Guide", "text": "We recommend ordering your normal size for the intended look. Detailed measurements available on each product page." } },
+        { "type": "faq_item", "settings": { "title": "Returns", "text": "Returns accepted within 14 days of delivery. Items must be unworn and in original condition with tags attached." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

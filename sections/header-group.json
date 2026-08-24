@@ -1,0 +1,26 @@
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "FREE SHIPPING ON ORDERS OVER Rp500.000 · NEW OUTDOOR T-SHIRTS JUST DROPPED"
+      },
+      "blocks": {
+      },
+      "block_order": [
+      ]
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

@@ -1,0 +1,84 @@
+{%- liquid
+  assign threshold = settings.free_shipping_threshold | times: 1
+  assign remaining = 0
+  assign pct = 0
+  if threshold > 0
+    assign remaining = threshold | minus: cart.total_price
+    if remaining < 0
+      assign remaining = 0
+    endif
+    assign pct = cart.total_price | times: 100 | divided_by: threshold
+    if pct > 100
+      assign pct = 100
+    endif
+  endif
+-%}
+
+<div class="drawer cart-drawer" data-cart-drawer role="dialog" aria-modal="true" aria-label="{{ 'cart.general.title' | t }}" aria-hidden="true">
+  <div class="overlay" data-drawer-close></div>
+  <aside class="drawer__panel cart-drawer__panel">
+    <div class="drawer__header">
+      <h2 class="headline-lg">{{ 'cart.general.title' | t }}</h2>
+      <button type="button" data-drawer-close aria-label="{{ 'accessibility.close' | t }}">
+        {% render 'icon', name: 'close' %}
+      </button>
+    </div>
+
+    {%- if threshold > 0 -%}
+      <div class="cart-drawer__shipping" data-free-shipping data-threshold="{{ threshold }}">
+        <p class="mono-ui" data-remaining>
+          {%- if remaining > 0 -%}
+            You are <strong>{{ remaining | money }}</strong> away from free shipping.
+          {%- else -%}
+            You've unlocked free shipping.
+          {%- endif -%}
+        </p>
+        <div class="cart-drawer__bar"><span data-bar style="width: {{ pct }}%;"></span></div>
+      </div>
+    {%- endif -%}
+
+    <div class="drawer__body cart-drawer__body" data-cart-drawer-body data-empty-text="{{ 'cart.general.empty' | t | upcase }}">
+      {%- if cart.item_count == 0 -%}
+        <p class="mono-ui text-muted" style="text-align:center;padding:48px 0;">{{ 'cart.general.empty' | t | upcase }}</p>
+      {%- else -%}
+        {%- for item in cart.items -%}
+          <div class="cart-item" data-key="{{ item.key }}" data-line="{{ forloop.index }}">
+            <div class="cart-item__media">
+              {%- if item.image -%}
+                <img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title | escape }}" width="96" height="128" loading="lazy">
+              {%- endif -%}
+            </div>
+            <div class="cart-item__body">
+              <div class="flex-between">
+                <h3 class="cart-item__title">{{ item.product_title | upcase }}</h3>
+                <button type="button" data-remove aria-label="{{ 'accessibility.remove' | t }}">
+                  {% render 'icon', name: 'delete', size: 18 %}
+                </button>
+              </div>
+              <p class="cart-item__variant mono-ui text-muted">{{ item.variant_title }}</p>
+              <div class="cart-item__foot">
+                <div class="qty" data-qty>
+                  <button type="button" data-qty-down aria-label="{{ 'accessibility.decrease' | t }}">-</button>
+                  <span data-qty-val>{{ item.quantity }}</span>
+                  <button type="button" data-qty-up aria-label="{{ 'accessibility.increase' | t }}">+</button>
+                </div>
+                <p class="cart-item__price mono-ui">{{ item.final_line_price | money }}</p>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    <div class="drawer__footer cart-drawer__footer" data-cart-drawer-footer{% if cart.item_count == 0 %} style="display:none;"{% endif %}>
+      <div class="cart-drawer__subtotal flex-between mono-ui">
+        <span class="text-muted">{{ 'cart.general.subtotal' | t | upcase }}</span>
+        <span data-cart-subtotal>{{ cart.total_price | money }}</span>
+      </div>
+      <p class="label-caps text-muted cart-drawer__note">{{ 'cart.general.shipping_note' | t }}</p>
+      <form action="{{ routes.cart_url }}" method="post" novalidate>
+        <button type="submit" name="checkout" class="btn btn--primary btn--block">{{ 'cart.general.checkout' | t }}</button>
+      </form>
+    </div>
+  </aside>
+</div>

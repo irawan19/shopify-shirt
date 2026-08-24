@@ -1,0 +1,2 @@
+{%- comment -%} Renders a Material Symbols icon. Usage: {% render 'icon', name: 'search' %} {%- endcomment -%}
+<span class="material-symbols-outlined{% if class %} {{ class }}{% endif %}"{% if size %} style="font-size: {{ size }}px;"{% endif %} aria-hidden="true">{{ name }}</span>

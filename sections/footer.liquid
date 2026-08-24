@@ -1,0 +1,100 @@
+<footer class="footer page-padding" role="contentinfo">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <a href="{{ routes.root_url }}" class="font-heading footer__logo">{{ shop.name }}</a>
+      {%- if section.settings.tagline != blank -%}
+        <p class="footer__tagline body-md text-muted">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+      {%- assign current_year = 'now' | date: '%Y' -%}
+      <p class="footer__rights label-caps text-muted">{{ 'footer.rights' | t: year: current_year }}</p>
+    </div>
+
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'link_list' -%}
+          <div class="footer__col" {{ block.shopify_attributes }}>
+            <h4 class="label-caps text-muted footer__heading">{{ block.settings.title | default: linklists[block.settings.menu].title }}</h4>
+            <ul class="footer__links">
+              {%- for link in linklists[block.settings.menu].links -%}
+                <li><a href="{{ link.url }}" class="body-md footer__link">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- when 'social' -%}
+          <div class="footer__col" {{ block.shopify_attributes }}>
+            <h4 class="label-caps text-muted footer__heading">{{ block.settings.title | default: 'Social' }}</h4>
+            <ul class="footer__links">
+              {%- if settings.social_instagram != blank -%}<li><a href="{{ settings.social_instagram }}" class="body-md footer__link">Instagram</a></li>{%- endif -%}
+              {%- if settings.social_twitter != blank -%}<li><a href="{{ settings.social_twitter }}" class="body-md footer__link">Twitter</a></li>{%- endif -%}
+              {%- if settings.social_pinterest != blank -%}<li><a href="{{ settings.social_pinterest }}" class="body-md footer__link">Pinterest</a></li>{%- endif -%}
+            </ul>
+          </div>
+        {%- when 'newsletter' -%}
+          <div class="footer__col footer__col--wide" {{ block.shopify_attributes }}>
+            <h4 class="label-caps text-muted footer__heading">{{ block.settings.title | default: 'Join the Expedition' }}</h4>
+            {%- if block.settings.text != blank -%}<p class="body-md text-muted footer__nl-text">{{ block.settings.text }}</p>{%- endif -%}
+            {%- form 'customer', class: 'footer__nl-form' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="hidden" name="contact[accepts_marketing]" value="true">
+              <input type="email" name="contact[email]" placeholder="{{ 'newsletter.placeholder' | t | upcase }}" class="footer__nl-input mono-ui" aria-label="{{ 'newsletter.placeholder' | t }}" required>
+              <button type="submit" class="footer__nl-btn" aria-label="{{ 'newsletter.button' | t }}">
+                {% render 'icon', name: 'arrow_forward', size: 20 %}
+              </button>
+              {%- if form.posted_successfully? -%}
+                <p class="footer__nl-success mono-ui">{{ 'newsletter.success' | t }}</p>
+              {%- endif -%}
+            {%- endform -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Brand tagline",
+      "default": "Premium outdoor gear engineered for the modern explorer. Minimalist luxury meets technical precision."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Heading" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "social",
+      "name": "Social links",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Heading", "default": "Social" }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Heading", "default": "Join the Expedition" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Subscribe to receive updates, access to exclusive deals, and more." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "link_list", "settings": { "title": "Navigation", "menu": "footer" } },
+        { "type": "social", "settings": { "title": "Social" } },
+        { "type": "newsletter" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,76 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "custom-theme",
+    "theme_version": "1.0.0",
+    "theme_author": "custom",
+    "theme_documentation_url": "https://shopify.dev/docs/themes",
+    "theme_support_url": "https://shopify.dev"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_primary", "label": "Primary", "default": "#000000" },
+      { "type": "color", "id": "color_on_primary", "label": "On primary", "default": "#ffffff" },
+      { "type": "color", "id": "color_text", "label": "Text", "default": "#111111" },
+      { "type": "color", "id": "color_surface", "label": "Surface", "default": "#ffffff" },
+      { "type": "color", "id": "color_interface", "label": "Interface", "default": "#f7f5f4" },
+      { "type": "color", "id": "color_hairline", "label": "Hairline", "default": "#e5e5e5" },
+      { "type": "color", "id": "color_coffee", "label": "Coffee accent", "default": "#4a3028" },
+      { "type": "color", "id": "color_muted", "label": "Muted text", "default": "#444748" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "type_heading_font", "label": "Heading font", "default": "eb_garamond_n4" },
+      { "type": "font_picker", "id": "type_body_font", "label": "Body font", "default": "assistant_n4" },
+      { "type": "font_picker", "id": "type_mono_font", "label": "Mono font", "default": "roboto_mono_n4" }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      { "type": "range", "id": "margin_desktop", "label": "Desktop margin", "min": 32, "max": 96, "step": 4, "unit": "px", "default": 64 },
+      { "type": "range", "id": "section_gap", "label": "Section gap", "min": 60, "max": 160, "step": 4, "unit": "px", "default": 120 }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      { "type": "checkbox", "id": "cart_drawer_enable", "label": "Enable cart drawer", "default": true },
+      { "type": "range", "id": "free_shipping_threshold", "label": "Free shipping threshold (cents)", "min": 0, "max": 10000000, "step": 10000, "unit": "c", "default": 500000 }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "select",
+        "id": "product_card_hover",
+        "label": "Hover behavior",
+        "options": [
+          { "value": "crossfade", "label": "Crossfade" },
+          { "value": "zoom", "label": "Zoom" },
+          { "value": "none", "label": "None" }
+        ],
+        "default": "crossfade"
+      }
+    ]
+  },
+  {
+    "name": "Homepage",
+    "settings": [
+      { "type": "image_picker", "id": "hero_image", "label": "Hero image" }
+    ]
+  },
+  {
+    "name": "Social",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_twitter", "label": "Twitter" },
+      { "type": "url", "id": "social_pinterest", "label": "Pinterest" },
+      { "type": "text", "id": "social_email", "label": "Email" }
+    ]
+  }
+]

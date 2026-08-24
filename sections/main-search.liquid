@@ -1,0 +1,79 @@
+{%- liquid
+  assign terms = search.terms
+  assign results_count = search.results_count
+-%}
+{%- paginate search.results by 24 -%}
+
+<div class="search-page page-padding">
+  <div class="search-page__head">
+    <p class="label-caps text-muted">{{ 'general.search.search' | t | upcase }}</p>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-page__form">
+      {% render 'icon', name: 'search' %}
+      <input type="search" name="q" value="{{ terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="search-page__input headline-lg" aria-label="{{ 'general.search.placeholder' | t }}">
+      <input type="hidden" name="type" value="product">
+    </form>
+  </div>
+
+  {%- if terms != blank -%}
+    <div class="search-page__results">
+      <h2 class="label-caps text-muted search-page__results-title">
+        {{ 'general.search.results_with_count' | t: count: results_count, terms: terms | upcase }}
+      </h2>
+
+      {%- if search.results_count > 0 -%}
+        <div class="grid-products">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item, show_swatches: true %}
+            {%- elsif item.object_type == 'article' -%}
+              <a href="{{ item.url }}" class="product-card">
+                <div class="product-card__media">
+                  {%- if item.article.image -%}
+                    <img src="{{ item.article.image | image_url: width: 600 }}" alt="{{ item.title | escape }}" loading="lazy">
+                  {%- endif -%}
+                </div>
+                <h3 class="product-card__title">{{ item.title }}</h3>
+                <p class="product-card__meta mono-ui">{{ item.article.published_at | date: '%b %Y' | upcase }}</p>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <div class="search-page__pagination">{% render 'pagination', paginate: paginate %}</div>
+        {%- endif -%}
+      {%- else -%}
+        <p class="search-page__empty mono-ui text-muted">{{ 'general.search.no_results' | t: terms: terms }}</p>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <div class="search-page__suggestions">
+      <div class="search-drawer__group">
+        <h3 class="label-caps text-muted">{{ 'general.search.top_products' | t }}</h3>
+        <ul class="mono-ui">
+          {%- assign featured = collections['all'].products | default: collections.first.products -%}
+          {%- for product in featured limit: 4 -%}
+            <li><a href="{{ product.url }}">{{ product.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="search-drawer__group">
+        <h3 class="label-caps text-muted">{{ 'general.search.collections' | t }}</h3>
+        <ul class="mono-ui">
+          {%- for collection in collections limit: 4 -%}
+            <li><a href="{{ collection.url }}">{{ collection.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Search",
+  "settings": []
+}
+{% endschema %}

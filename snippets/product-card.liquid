@@ -1,0 +1,73 @@
+{%- comment -%}
+  Reusable product card.
+  Usage: {% render 'product-card', product: product, show_swatches: true, bordered: true %}
+{%- endcomment -%}
+{%- liquid
+  assign featured = product.featured_media
+  assign second = product.media[1] | default: nil
+  assign hover = settings.product_card_hover
+  assign on_sale = false
+  if product.compare_at_price > product.price and product.available
+    assign on_sale = true
+  endif
+  assign sold_out = false
+  unless product.available
+    assign sold_out = true
+  endunless
+-%}
+<a href="{{ product.url }}" class="product-card group{% if bordered %} product-card--bordered{% endif %}" aria-label="{{ product.title | escape }}">
+  <div class="product-card__media">
+    {%- if featured -%}
+      {%- assign main_src = featured | image_url: width: 800 -%}
+      <img class="product-image-main"
+        src="{{ main_src }}"
+        srcset="{{ featured | image_url: width: 400 }} 400w, {{ featured | image_url: width: 600 }} 600w, {{ featured | image_url: width: 800 }} 800w, {{ featured | image_url: width: 1000 }} 1000w"
+        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+        alt="{{ featured.alt | default: product.title | escape }}"
+        width="{{ featured.width }}" height="{{ featured.height }}"
+        loading="lazy">
+    {%- else -%}
+      <div class="product-card__placeholder" aria-hidden="true"></div>
+    {%- endif -%}
+    {%- if hover == 'crossfade' and second -%}
+      <img class="product-image-hover"
+        src="{{ second | image_url: width: 800 }}"
+        srcset="{{ second | image_url: width: 400 }} 400w, {{ second | image_url: width: 600 }} 600w, {{ second | image_url: width: 800 }} 800w"
+        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+        alt="{{ second.alt | default: product.title | escape }}"
+        width="{{ second.width }}" height="{{ second.height }}"
+        loading="lazy">
+    {%- endif -%}
+
+    {%- if sold_out -%}
+      <span class="badge badge--coffee">Sold Out</span>
+    {%- elsif on_sale -%}
+      <span class="badge">Sale</span>
+    {%- elsif product.tags contains 'New' or product.tags contains 'new' -%}
+      <span class="badge">New</span>
+    {%- elsif product.tags contains 'Best Seller' or product.tags contains 'best seller' -%}
+      <span class="badge">Best Seller</span>
+    {%- elsif product.tags contains 'Last Chance' or product.tags contains 'last chance' -%}
+      <span class="badge">Last Chance</span>
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__body{% if bordered %} product-card__body--bordered{% endif %}">
+    <h3 class="product-card__title">{{ product.title }}</h3>
+    <p class="product-card__meta">
+      {{ product.price | money }}{% if product.metafields.custom.material != blank %} / {{ product.metafields.custom.material | upcase }}{% endif %}
+    </p>
+    {%- if show_swatches -%}
+      <div class="product-card__swatches" aria-hidden="true" style="margin-top:8px;">
+        {%- for opt in product.options_with_values -%}
+          {%- if opt.name == 'Color' or opt.name == 'Colour' -%}
+            {%- for val in opt.values -%}
+              {%- assign v = val | downcase -%}
+              <span class="swatch-dot swatch-dot--{{ v | handle }}{% if v contains 'coffee' %} swatch-dot--coffee{% endif %}{% if v contains 'black' %} swatch-dot--black{% endif %}{% if v contains 'white' %} swatch-dot--white{% endif %}" title="{{ val | escape }}"></span>
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</a>

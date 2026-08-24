@@ -1,0 +1,27 @@
+<article class="article page-padding" style="padding-top: 96px; padding-bottom: var(--section-gap);">
+  <div style="max-width: 48rem; margin: 0 auto;">
+    <header style="margin-bottom: 48px;">
+      <p class="mono-ui text-muted">{{ article.published_at | date: '%B %d, %Y' | upcase }}</p>
+      <h1 class="display-lg" style="margin-top: 16px;">{{ article.title }}</h1>
+    </header>
+    {%- if article.image -%}
+      <div style="aspect-ratio: 16/9; overflow: hidden; margin-bottom: 48px;">
+        <img src="{{ article.image | image_url: width: 1600 }}" alt="{{ article.title | escape }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+      </div>
+    {%- endif -%}
+    <div class="rte">{{ article.content }}</div>
+    {%- if blog.comments_enabled? -%}
+      {%- if article.comments_count > 0 -%}
+        <section style="margin-top: 64px; border-top: 1px solid var(--color-hairline); padding-top: 32px;">
+          <h2 class="headline-lg">{{ article.comments_count }} comments</h2>
+          {%- for comment in article.comments -%}
+            <div style="padding: 16px 0; border-bottom: 1px solid var(--color-hairline);">
+              <p class="mono-ui text-muted">{{ comment.author }} · {{ comment.created_at | date: '%b %d' }}</p>
+              <p>{{ comment.content }}</p>
+            </div>
+          {%- endfor -%}
+        </section>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</article>

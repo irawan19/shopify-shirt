@@ -1,0 +1,43 @@
+{%- liquid
+  assign predictive = true
+-%}
+<div class="drawer search-drawer" data-search-drawer role="dialog" aria-modal="true" aria-label="{{ 'general.search.title' | t }}" aria-hidden="true">
+  <div class="overlay" data-drawer-close></div>
+  <aside class="drawer__panel search-drawer__panel">
+    <div class="drawer__header">
+      <h2 class="headline-lg">{{ 'general.search.title' | t }}</h2>
+      <button type="button" data-drawer-close aria-label="{{ 'accessibility.close' | t }}">
+        {% render 'icon', name: 'close' %}
+      </button>
+    </div>
+    <div class="search-drawer__head">
+      {% render 'icon', name: 'search' %}
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-drawer__form">
+        <input type="search" name="q" class="search-drawer__input" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" autocomplete="off">
+        <input type="hidden" name="type" value="product">
+      </form>
+    </div>
+    <div class="search-drawer__body">
+      <div class="search-drawer__suggestions">
+        <div class="search-drawer__group">
+          <h3 class="label-caps text-muted">{{ 'general.search.top_products' | t }}</h3>
+          <ul class="mono-ui">
+            {%- assign featured = collections['all'].products | default: collections.first.products -%}
+            {%- for product in featured limit: 3 -%}
+              <li><a href="{{ product.url }}">{{ product.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class="search-drawer__group">
+          <h3 class="label-caps text-muted">{{ 'general.search.collections' | t }}</h3>
+          <ul class="mono-ui">
+            {%- for collection in collections limit: 4 -%}
+              <li><a href="{{ collection.url }}">{{ collection.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+      <p class="label-caps text-muted" style="margin-bottom:16px;">Press enter to see all results.</p>
+    </div>
+  </aside>
+</div>

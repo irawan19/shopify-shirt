@@ -1,0 +1,43 @@
+<div class="announcement">
+  {%- for block in section.blocks -%}
+    {%- if block.settings.text != blank -%}
+      <span class="announcement__item" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+      {%- unless forloop.last %} &nbsp;·&nbsp; {% endunless -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if section.blocks.size == 0 and section.settings.text != blank -%}
+    <span>{{ section.settings.text }}</span>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Default text (used when no blocks)",
+      "default": "FREE SHIPPING ON ORDERS OVER Rp500.000 · NEW OUTDOOR T-SHIRTS JUST DROPPED"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        { "type": "announcement", "settings": { "text": "FREE SHIPPING ON ORDERS OVER Rp500.000" } },
+        { "type": "announcement", "settings": { "text": "NEW OUTDOOR T-SHIRTS JUST DROPPED" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

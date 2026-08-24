@@ -1,0 +1,67 @@
+<section class="collection-showcase-section page-padding" style="padding-top: var(--section-gap); padding-bottom: var(--section-gap);">
+  {%- if section.settings.heading != blank -%}
+    <div class="featured-products__head" style="margin-bottom: var(--gutter);">
+      <h2 class="featured-products__title">{{ section.settings.heading }}</h2>
+      {%- if section.settings.view_all_url != blank -%}
+        <a href="{{ section.settings.view_all_url }}" class="label-caps featured-products__link">{{ section.settings.view_all_label | default: 'VIEW ALL' }}</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="grid-products">
+    {%- for block in section.blocks -%}
+      {%- assign coll = block.settings.collection -%}
+      {%- if coll != blank -%}
+        <a href="{{ coll.url }}" class="collection-showcase" {{ block.shopify_attributes }}>
+          <div class="collection-showcase__media">
+            {%- if coll.featured_image -%}
+              <img src="{{ coll.featured_image | image_url: width: 800 }}"
+                srcset="{{ coll.featured_image | image_url: width: 400 }} 400w, {{ coll.featured_image | image_url: width: 600 }} 600w, {{ coll.featured_image | image_url: width: 800 }} 800w"
+                sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+                alt="{{ coll.title | escape }}" loading="lazy">
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: '' }}
+            {%- endif -%}
+            <div class="collection-showcase__overlay"></div>
+            <div class="collection-showcase__caption">
+              <h3 class="collection-showcase__title">{{ coll.title }}</h3>
+              <span class="collection-showcase__cta">{{ block.settings.cta_label | default: 'SHOP NOW' }}</span>
+            </div>
+          </div>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection showcase",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "SHOP BY COLLECTION" },
+    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "VIEW ALL" },
+    { "type": "url", "id": "view_all_url", "label": "View all URL" }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "cta_label", "label": "CTA label", "default": "SHOP NOW" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection showcase",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}

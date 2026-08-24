@@ -1,0 +1,42 @@
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "tagline": "Premium outdoor gear engineered for the modern explorer. Minimalist luxury meets technical precision."
+      },
+      "blocks": {
+        "nav": {
+          "type": "link_list",
+          "settings": {
+            "title": "Navigation",
+            "menu": "footer"
+          }
+        },
+        "social": {
+          "type": "social",
+          "settings": {
+            "title": "Social"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "title": "Join the Expedition",
+            "text": "Subscribe to receive updates, access to exclusive deals, and more."
+          }
+        }
+      },
+      "block_order": [
+        "nav",
+        "social",
+        "newsletter"
+      ]
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

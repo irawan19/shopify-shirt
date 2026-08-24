@@ -1,0 +1,191 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if current_variant.compare_at_price > current_variant.price
+    assign on_sale = true
+  endif
+-%}
+
+<div class="product page-padding" data-product-root>
+  <div class="product__layout">
+    {%- comment -%} Gallery (60%) {%- endcomment -%}
+    <div class="product__gallery" data-product-gallery>
+      {%- if product.media.size > 0 -%}
+        {%- for media in product.media -%}
+          <div class="product__media-item{% if forloop.first %} is-active{% endif %}" data-media-id="{{ media.id }}" data-media-index="{{ forloop.index0 }}">
+            {%- case media.media_type -%}
+              {%- when 'image' -%}
+                <img src="{{ media | image_url: width: 1600 }}"
+                  srcset="{{ media | image_url: width: 600 }} 600w, {{ media | image_url: width: 900 }} 900w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1600 }} 1600w"
+                  sizes="(min-width: 768px) 58vw, 100vw"
+                  alt="{{ media.alt | default: product.title | escape }}"
+                  width="{{ media.width }}" height="{{ media.height }}"
+                  {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+              {%- when 'video' -%}
+                {{ media | media_tag: image_size: '1600x', controls: true }}
+              {%- when 'external_video' -%}
+                {{ media | external_video_tag }}
+              {%- else -%}
+                {{ media | media_tag }}
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="product__media-item is-active">{{ 'product-1' | placeholder_svg_tag: '' }}</div>
+      {%- endif -%}
+
+      {%- comment -%} Thumbnail strip (mobile + desktop) {%- endcomment -%}
+      {%- if product.media.size > 1 -%}
+        <div class="product__thumbs no-scrollbar" data-product-thumbs>
+          {%- for media in product.media -%}
+            <button type="button" class="product__thumb{% if forloop.first %} is-active{% endif %}" data-thumb-target="{{ media.id }}" aria-label="View image {{ forloop.index }}">
+              <img src="{{ media | image_url: width: 120 }}" alt="" width="60" height="80" loading="lazy">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Info panel (40%, sticky) {%- endcomment -%}
+    <div class="product__info">
+      {%- comment -%} Breadcrumbs {%- endcomment -%}
+      <nav class="product__crumbs mono-ui text-muted" aria-label="Breadcrumb">
+        <a href="{{ routes.all_products_collection_url }}">{{ 'collections.general.all' | t | upcase }}</a>
+        <span>/</span>
+        {%- if product.collections.size > 0 -%}
+          {%- assign coll = product.collections.first -%}
+          <a href="{{ coll.url }}">{{ coll.title | upcase }}</a>
+        {%- endif -%}
+        <span>/</span>
+        <span class="text-primary">{{ product.title | upcase }}</span>
+      </nav>
+
+      <h1 class="headline-xl product__title">{{ product.title | upcase }}</h1>
+
+      <div class="product__price-row mono-ui">
+        <span data-product-price>{{ current_variant.price | money }}</span>
+        {%- if on_sale -%}
+          <s class="product__compare text-muted" data-product-compare>{{ current_variant.compare_at_price | money }}</s>
+        {%- endif -%}
+      </div>
+
+      {%- if product.description != blank -%}
+        <p class="product__desc body-md">{{ product.description | strip_html | truncatewords: 24 }}</p>
+      {%- endif -%}
+
+      <div data-product-form data-variant-root>
+      {%- form 'product', product -%}
+        <input type="hidden" name="id" data-variant-id value="{{ current_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+
+        {%- comment -%} Variant selectors {%- endcomment -%}
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <div class="product__option" data-option-selector>
+              <div class="product__option-head flex-between">
+                <span class="label-caps text-muted">{{ option.name | upcase }}{% if option.name == 'Color' or option.name == 'Colour' %}: <span class="text-primary" data-option-label>{{ option.selected_value | upcase }}</span>{% endif %}</span>
+              </div>
+              {%- if option.name == 'Color' or option.name == 'Colour' -%}
+                <div class="product__swatches">
+                  {%- for value in option.values -%}
+                    {%- assign v = value | downcase -%}
+                    <button type="button" class="product__swatch swatch-dot swatch-dot--{{ value | handle }}{% if value == option.selected_value %} is-selected{% endif %}" data-option-value="{{ value | escape }}" aria-label="{{ value | escape }}"{% if value == option.selected_value %} aria-pressed="true"{% endif %}></button>
+                  {%- endfor -%}
+                </div>
+              {%- else -%}
+                <div class="product__sizes">
+                  {%- for value in option.values -%}
+                    <button type="button" class="product__size mono-ui{% if value == option.selected_value %} is-selected{% endif %}" data-option-value="{{ value | escape }}">{{ value }}</button>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        {%- comment -%} Stock / availability note {%- endcomment -%}
+        <p class="product__stock mono-ui{% if current_variant.available %} text-muted{% else %} text-coffee{% endif %}" data-stock-note>
+          {%- if current_variant.available -%}IN STOCK{%- else -%}SOLD OUT{%- endif -%}
+        </p>
+
+        {%- comment -%} Actions {%- endcomment -%}
+        <div class="product__actions">
+          <button type="submit" name="add" class="btn btn--primary btn--block" data-add-button{% unless current_variant.available %} disabled{% endunless %}>
+            <span data-add-label>{% if current_variant.available %}{{ 'products.product.add_to_cart' | t | upcase }}{% else %}{{ 'products.product.sold_out' | t | upcase }}{% endif %}</span>
+            {% render 'icon', name: 'arrow_forward', size: 16 %}
+          </button>
+          <button type="submit" class="btn btn--secondary btn--block" data-buy-now>
+            {{ 'products.product.buy_now' | t | upcase }}
+          </button>
+        </div>
+
+        <p class="product__error mono-ui text-coffee is-hidden" data-form-error role="alert"></p>
+      {%- endform -%}
+      </div>
+
+      {%- comment -%} Accordions {%- endcomment -%}
+      <div class="product__accordions">
+        <details class="accordion" open>
+          <summary>{{ 'products.product.details' | t | upcase }} {% render 'icon', name: 'keyboard_arrow_down', class: 'accordion__icon' %}</summary>
+          <div class="accordion__body mono-ui">
+            {%- if product.metafields.custom.details != blank -%}
+              {{ product.metafields.custom.details }}
+            {%- else -%}
+              <ul>
+                <li>01 &nbsp; Premium screen-printed graphic.</li>
+                <li>02 &nbsp; Ribbed crewneck construction.</li>
+                <li>03 &nbsp; Garment dyed for a vintage feel.</li>
+                <li>04 &nbsp; Designed for the outdoors.</li>
+              </ul>
+            {%- endif -%}
+          </div>
+        </details>
+        <details class="accordion">
+          <summary>{{ 'products.product.material_fit' | t | upcase }} {% render 'icon', name: 'keyboard_arrow_down', class: 'accordion__icon' %}</summary>
+          <div class="accordion__body mono-ui">
+            {%- if product.metafields.custom.material != blank -%}<p><strong class="text-primary">MATERIAL:</strong> {{ product.metafields.custom.material }}</p>{%- endif -%}
+            {%- if product.metafields.custom.fit != blank -%}<p><strong class="text-primary">FIT:</strong> {{ product.metafields.custom.fit }}</p>{%- endif -%}
+            {%- if product.metafields.custom.material == blank and product.metafields.custom.fit == blank -%}
+              <p><strong class="text-primary">MATERIAL:</strong> 100% Organic Cotton (240GSM Heavyweight).</p>
+              <p><strong class="text-primary">FIT:</strong> Boxy, slightly oversized fit.</p>
+            {%- endif -%}
+          </div>
+        </details>
+        <details class="accordion">
+          <summary>{{ 'products.product.shipping_returns' | t | upcase }} {% render 'icon', name: 'keyboard_arrow_down', class: 'accordion__icon' %}</summary>
+          <div class="accordion__body mono-ui">
+            {%- if product.metafields.custom.shipping != blank -%}
+              {{ product.metafields.custom.shipping }}
+            {%- else -%}
+              <p>Free standard shipping on qualifying orders. Next day delivery available at checkout.</p>
+              <p>Returns accepted within 14 days of delivery. Items must be unworn and in original condition.</p>
+            {%- endif -%}
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Encode variants for JS {%- endcomment -%}
+<script type="application/json" data-variants-json>
+  [
+    {%- for variant in product.variants -%}
+      {
+        "id": {{ variant.id }},
+        "available": {{ variant.available }},
+        "price": {{ variant.price }},
+        "compare_at_price": {{ variant.compare_at_price | default: 0 }},
+        "options": {{ variant.options | json }},
+        "featured_media": {{ variant.featured_media.id | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": []
+}
+{% endschema %}

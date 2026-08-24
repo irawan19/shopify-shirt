@@ -1,0 +1,40 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page-about",
+      "settings": {
+        "intro": "We engineer technical apparel that rejects the rugged tropes of traditional outdoor gear. Our pieces are designed with architectural precision, utilizing advanced fabric technologies wrapped in a minimalist, gallery-worthy aesthetic.",
+        "specs": "01. BREATHABILITY\n02. DURABILITY\n03. SILHOUETTE",
+        "faq_heading": "F.A.Q.",
+        "show_contact": true,
+        "contact_heading": "Contact",
+        "contact_text": "For inquiries regarding collections, technical specifications, or wholesale partnerships, please complete the form."
+      },
+      "blocks": {
+        "faq1": {
+          "type": "faq_item",
+          "settings": {
+            "title": "Shipping",
+            "text": "Complimentary express shipping on all domestic orders over $200. International shipping is calculated at checkout."
+          }
+        },
+        "faq2": {
+          "type": "faq_item",
+          "settings": {
+            "title": "Size Guide",
+            "text": "We recommend ordering your normal size for the intended look. Detailed measurements available on each product page."
+          }
+        },
+        "faq3": {
+          "type": "faq_item",
+          "settings": {
+            "title": "Returns",
+            "text": "Returns accepted within 14 days of delivery. Items must be unworn and in original condition with tags attached."
+          }
+        }
+      },
+      "block_order": ["faq1", "faq2", "faq3"]
+    }
+  },
+  "order": ["main"]
+}

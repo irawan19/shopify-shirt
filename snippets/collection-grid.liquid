@@ -1,0 +1,106 @@
+{%- liquid
+  assign show_filters = show_filters
+  assign show_sort = show_sort
+  assign bordered_grid = bordered_grid
+  assign default_description = default_description
+  assign header_layout = header_layout | default: 'asymmetric'
+-%}
+
+<div class="collection" data-collection-section>
+  {%- if header_layout == 'centered' -%}
+    <header class="collection__header collection__header--centered page-padding">
+      <h1 class="display-lg collection__title">{{ collection.title | default: 'ALL T-SHIRTS' }}</h1>
+      <p class="label-caps text-muted collection__subtitle">{{ collection.description | strip_html | default: default_description | default: 'THE COMPLETE COLLECTION' | truncatewords: 12 | upcase }}</p>
+    </header>
+  {%- else -%}
+    <header class="collection__header page-padding">
+      <div class="collection__header-grid">
+        <div class="collection__title-wrap">
+          <h1 class="display-lg collection__title">{{ collection.title | default: 'ALL T-SHIRTS' }}</h1>
+          {%- if collection.description != blank -%}
+            <p class="body-lg text-muted collection__desc">{{ collection.description | strip_html | truncatewords: 30 }}</p>
+          {%- elsif default_description != blank -%}
+            <p class="body-lg text-muted collection__desc">{{ default_description }}</p>
+          {%- else -%}
+            <p class="body-lg text-muted collection__desc">Explore the {{ shop.name }} collection.</p>
+          {%- endif -%}
+        </div>
+        <div class="collection__count-wrap">
+          <span class="mono-ui text-coffee collection__count">{{ collection.products_count }} T-SHIRTS</span>
+        </div>
+      </div>
+    </header>
+  {%- endif -%}
+
+  {%- if show_filters or show_sort -%}
+    <form class="collection__toolbar page-padding" data-collection-toolbar data-filter-form method="get" action="{{ collection.url }}">
+      <div class="collection__filters">
+        {%- if show_filters -%}
+          <span class="label-caps text-muted hide-mobile">{{ 'collections.general.filters' | t }}:</span>
+          {%- for filter in collection.filters -%}
+            <details class="filter-dropdown">
+              <summary class="label-caps filter-dropdown__summary">
+                {{ filter.label | upcase }}
+                {% render 'icon', name: 'arrow_drop_down', size: 16 %}
+              </summary>
+              <div class="filter-dropdown__panel">
+                {%- case filter.type -%}
+                  {%- when 'price_range' -%}
+                    <div class="filter-price">
+                      <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" placeholder="Min" class="filter-price__input mono-ui">
+                      <span>&mdash;</span>
+                      <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" placeholder="Max" class="filter-price__input mono-ui">
+                    </div>
+                  {%- else -%}
+                    {%- for value in filter.values -%}
+                      <label class="filter-option mono-ui{% if value.active %} is-active{% endif %}{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                        <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %} data-filter-input>
+                        <span>{{ value.label | upcase }}</span>
+                        <span class="filter-option__count">({{ value.count }})</span>
+                      </label>
+                    {%- endfor -%}
+                {%- endcase -%}
+              </div>
+            </details>
+          {%- endfor -%}
+          {%- if collection.current_vendor or collection.current_type -%}
+            <input type="hidden" name="q" value="{{ collection.current_vendor }}{{ collection.current_type }}">
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      <div class="collection__sort">
+        {%- if show_sort -%}
+          <span class="label-caps text-muted">{{ 'collections.general.sort_by' | t }}:</span>
+          <select name="sort_by" class="collection__sort-select label-caps" data-sort-select>
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}" {% if option.value == collection.sort_by or option.value == collection.default_sort_by %}selected{% endif %}>{{ option.name | upcase }}</option>
+            {%- endfor -%}
+          </select>
+        {%- endif -%}
+      </div>
+    </form>
+  {%- endif -%}
+
+  <div class="collection__products page-padding">
+    {%- if collection.products_count > 0 -%}
+      <div class="grid-products{% if bordered_grid %} grid-products--bordered{% endif %}" id="CollectionGrid">
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product, show_swatches: true, bordered: bordered_grid %}
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <div class="collection__pagination">
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="btn btn--secondary collection__load-more" data-load-more>{{ 'collections.general.load_more' | t }}</a>
+          {%- endif -%}
+          {%- render 'pagination', paginate: paginate -%}
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      <p class="collection__empty mono-ui text-muted">{{ 'collections.general.no_products' | t }}</p>
+    {%- endif -%}
+  </div>
+</div>
+

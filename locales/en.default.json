@@ -1,0 +1,128 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "search": "Search",
+      "placeholder": "Search for products, collections...",
+      "results_for": "Results for \"{{ terms }}\"",
+      "no_results": "No results found for \"{{ terms }}\".",
+      "results_with_count": "{{ count }} result(s) for \"{{ terms }}\"",
+      "title": "Search",
+      "top_products": "Top products",
+      "collections": "Collections"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "label": "Page {{ number }} of {{ total }}"
+    },
+    "accessibility": {
+      "skip_to_text": "Skip to content"
+    }
+  },
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "refresh_page": "Choosing a selection results in a full page refresh.",
+    "link_messages": {
+      "new_window": "Opens in a new window."
+    },
+    "close": "Close",
+    "menu": "Menu",
+    "cart": "Cart",
+    "search": "Search",
+    "account": "Account",
+    "increase": "Increase quantity",
+    "decrease": "Decrease quantity",
+    "remove": "Remove item"
+  },
+  "cart": {
+    "general": {
+      "title": "Your Bag",
+      "empty": "Your bag is empty",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "shipping_note": "Shipping & taxes calculated at checkout.",
+      "continue_shopping": "Continue shopping",
+      "remove": "Remove",
+      "quantity": "Quantity"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Bag",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "buy_now": "Buy It Now",
+      "from": "From",
+      "on_sale": "Sale",
+      "save_html": "Save {{ saved_amount }}",
+      "size_guide": "Size Guide",
+      "details": "Details",
+      "material_fit": "Material & Fit",
+      "shipping_returns": "Shipping & Returns",
+      "color": "Color",
+      "size": "Size",
+      "quantity": "Quantity",
+      "share": "Share"
+    }
+  },
+  "collections": {
+    "general": {
+      "all": "All T-Shirts",
+      "items_count": "{{ count }} T-Shirts",
+      "sort_by": "Sort by",
+      "filters": "Filter",
+      "clear": "Clear all",
+      "apply": "Apply",
+      "no_products": "No products found.",
+      "load_more": "Load More Products"
+    },
+    "sorting": {
+      "featured": "Featured",
+      "newest": "Newest",
+      "price_ascending": "Price: Low-High",
+      "price_descending": "Price: High-Low",
+      "best_selling": "Best Selling",
+      "alphabetical": "Alphabetical, A-Z",
+      "alphabetical_reverse": "Alphabetical, Z-A"
+    },
+    "facets": {
+      "size": "Size",
+      "color": "Color",
+      "price": "Price",
+      "collection": "Collection",
+      "availability": "Availability",
+      "in_stock": "In Stock",
+      "out_of_stock": "Out of Stock"
+    }
+  },
+  "newsletter": {
+    "label": "Join the Expedition",
+    "sublabel": "Subscribe to receive updates, access to exclusive deals, and more.",
+    "placeholder": "Email address",
+    "button": "Subscribe",
+    "success": "Thanks for subscribing."
+  },
+  "contact": {
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send Inquiry",
+      "success": "Thanks for your inquiry. We'll be in touch."
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "Account"
+    }
+  },
+  "footer": {
+    "navigation": "Navigation",
+    "social": "Social",
+    "rights": "© {{ year }} FITRA SHOP. All rights reserved."
+  }
+}

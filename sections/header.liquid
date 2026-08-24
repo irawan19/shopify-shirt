@@ -1,0 +1,105 @@
+{%- liquid
+  assign menu_handle = section.settings.menu
+  if menu_handle == blank
+    assign menu_handle = 'main-menu'
+  endif
+  assign menu = linklists[menu_handle]
+-%}
+
+<header class="header" data-sticky-header data-section-id="{{ section.id }}">
+  {%- comment -%} Desktop header {%- endcomment -%}
+  <nav class="header__desktop hide-mobile" aria-label="Primary">
+    <div class="header__inner page-padding">
+      <div class="header__left">
+        <a href="{{ routes.root_url }}" class="header__logo font-heading">{{ shop.name }}</a>
+        <ul class="header__nav">
+          {%- for link in menu.links -%}
+            <li>
+              <a href="{{ link.url }}" class="label-caps header__link{% if link.active or link.current %} header__link--active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | upcase }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="header__actions">
+        <button type="button" data-search-open aria-label="{{ 'accessibility.search' | t }}">
+          {% render 'icon', name: 'search' %}
+        </button>
+        <a href="{{ routes.account_url }}" aria-label="{{ 'accessibility.account' | t }}">
+          {% render 'icon', name: 'person' %}
+        </a>
+        <button type="button" data-cart-open aria-label="{{ 'accessibility.cart' | t }}" class="header__cart">
+          {% render 'icon', name: 'shopping_bag' %}
+          <span class="header__cart-count{% if cart.item_count == 0 %} is-hidden{% endif %}" data-cart-count-wrap>
+            <span data-cart-count>{{ cart.item_count }}</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  {%- comment -%} Mobile header {%- endcomment -%}
+  <nav class="header__mobile hide-desktop" aria-label="Mobile primary">
+    <div class="header__inner page-padding">
+      <button type="button" data-menu-open aria-label="{{ 'accessibility.menu' | t }}">
+        {% render 'icon', name: 'menu' %}
+      </button>
+      <a href="{{ routes.root_url }}" class="header__logo font-heading">{{ shop.name }}</a>
+      <button type="button" data-cart-open aria-label="{{ 'accessibility.cart' | t }}" class="header__cart">
+        {% render 'icon', name: 'shopping_bag' %}
+        <span class="header__cart-count{% if cart.item_count == 0 %} is-hidden{% endif %}" data-cart-count-wrap>
+          <span data-cart-count>{{ cart.item_count }}</span>
+        </span>
+      </button>
+    </div>
+  </nav>
+
+  {%- comment -%} Mobile menu drawer {%- endcomment -%}
+  <div class="mobile-menu" data-mobile-menu aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="overlay" data-menu-close></div>
+    <aside class="mobile-menu__panel">
+      <div class="mobile-menu__head">
+        <a href="{{ routes.root_url }}" class="font-heading header__logo">{{ shop.name }}</a>
+        <button type="button" data-menu-close aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'icon', name: 'close', size: 28 %}
+        </button>
+      </div>
+      <nav class="mobile-menu__body">
+        <ul>
+          {%- for link in menu.links -%}
+            <li>
+              <a href="{{ link.url }}" class="font-heading mobile-menu__link{% if link.current %} is-active{% endif %}">{{ link.title | upcase }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+        <div class="mobile-menu__search">
+          <form action="{{ routes.search_url }}" method="get" role="search">
+            <input type="search" name="q" placeholder="Search..." aria-label="{{ 'accessibility.search' | t }}" class="mobile-menu__search-input">
+            <button type="submit" aria-label="{{ 'accessibility.search' | t }}">{% render 'icon', name: 'search' %}</button>
+          </form>
+        </div>
+        <div class="mobile-menu__social">
+          {%- if settings.social_instagram != blank -%}<a href="{{ settings.social_instagram }}" class="label-caps">Instagram</a>{%- endif -%}
+          {%- if settings.social_twitter != blank -%}<a href="{{ settings.social_twitter }}" class="label-caps">Twitter</a>{%- endif -%}
+          {%- if settings.social_pinterest != blank -%}<a href="{{ settings.social_pinterest }}" class="label-caps">Pinterest</a>{%- endif -%}
+        </div>
+      </nav>
+    </aside>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    }
+  ],
+  "presets": [
+    { "name": "Header" }
+  ]
+}
+{% endschema %}

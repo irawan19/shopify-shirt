@@ -1,0 +1,58 @@
+{%- if cart.item_count == 0 -%}
+  <div class="cart-page page-padding" style="padding-top: 96px; padding-bottom: 96px; text-align: center;">
+    <h1 class="headline-xl">{{ 'cart.general.title' | t }}</h1>
+    <p class="mono-ui text-muted" style="margin: 24px 0;">{{ 'cart.general.empty' | t | upcase }}</p>
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">{{ 'cart.general.continue_shopping' | t | upcase }}</a>
+  </div>
+{%- else -%}
+  <div class="cart-page page-padding" style="padding-top: 48px; padding-bottom: var(--section-gap);">
+    <h1 class="headline-xl" style="margin-bottom: 48px;">{{ 'cart.general.title' | t }}</h1>
+    <div class="cart-page__layout">
+      <div class="cart-page__items">
+        <form action="{{ routes.cart_url }}" method="post" novalidate>
+          {%- for item in cart.items -%}
+            <div class="cart-page__item">
+              <div class="cart-page__item-media">
+                {%- if item.image -%}
+                  <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" width="120" height="160" loading="lazy">
+                {%- endif -%}
+              </div>
+              <div class="cart-page__item-body">
+                <div class="flex-between">
+                  <a href="{{ item.url }}" class="cart-item__title">{{ item.product_title | upcase }}</a>
+                  <a href="{{ item.url_to_remove }}" class="cart-item__remove" aria-label="{{ 'accessibility.remove' | t }}">{% render 'icon', name: 'delete', size: 18 %}</a>
+                </div>
+                <p class="cart-item__variant mono-ui text-muted">{{ item.variant_title }}</p>
+                <div class="cart-page__item-foot">
+                  <div class="qty">
+                    <button type="submit" name="updates[{{ item.key }}]" value="{{ item.quantity | minus: 1 }}" aria-label="{{ 'accessibility.decrease' | t }}" formnovalidate>-</button>
+                    <span>{{ item.quantity }}</span>
+                    <button type="submit" name="updates[{{ item.key }}]" value="{{ item.quantity | plus: 1 }}" aria-label="{{ 'accessibility.increase' | t }}" formnovalidate>+</button>
+                  </div>
+                  <p class="cart-item__price mono-ui">{{ item.final_line_price | money }}</p>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </form>
+      </div>
+      <aside class="cart-page__summary">
+        <div class="cart-page__subtotal flex-between mono-ui">
+          <span class="text-muted">{{ 'cart.general.subtotal' | t | upcase }}</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+        <p class="label-caps text-muted cart-drawer__note">{{ 'cart.general.shipping_note' | t }}</p>
+        <form action="{{ routes.cart_url }}" method="post" novalidate>
+          <button type="submit" name="checkout" class="btn btn--primary btn--block">{{ 'cart.general.checkout' | t | upcase }}</button>
+        </form>
+      </aside>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,23 @@
+{%- paginate blog.articles by 12 -%}
+<div class="blog page-padding" style="padding-top: 96px; padding-bottom: var(--section-gap);">
+  <header class="blog__head" style="margin-bottom: 64px; text-align: center;">
+    <h1 class="display-lg">{{ blog.title | default: 'Journal' }}</h1>
+  </header>
+  <div class="grid-products">
+    {%- for article in blog.articles -%}
+      <a href="{{ article.url }}" class="product-card">
+        <div class="product-card__media">
+          {%- if article.image -%}
+            <img src="{{ article.image | image_url: width: 800 }}" alt="{{ article.title | escape }}" loading="lazy">
+          {%- endif -%}
+        </div>
+        <h3 class="product-card__title">{{ article.title }}</h3>
+        <p class="product-card__meta mono-ui">{{ article.published_at | date: '%b %Y' | upcase }}</p>
+      </a>
+    {%- endfor -%}
+  </div>
+  {%- if paginate.pages > 1 -%}
+    <div style="margin-top: 64px;">{% render 'pagination', paginate: paginate %}</div>
+  {%- endif -%}
+</div>
+{%- endpaginate -%}

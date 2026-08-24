@@ -1,0 +1,34 @@
+{%- paginate collection.products by section.settings.products_per_page -%}
+  {%- render 'collection-grid',
+      paginate: paginate,
+      show_filters: section.settings.show_filters,
+      show_sort: section.settings.show_sort,
+      bordered_grid: section.settings.bordered_grid,
+      default_description: section.settings.default_description,
+      header_layout: section.settings.header_layout -%}
+{%- endpaginate -%}
+
+<script src="{{ 'collection.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Collection page",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "show_filters", "label": "Show filters", "default": true },
+    { "type": "checkbox", "id": "show_sort", "label": "Show sort", "default": true },
+    { "type": "checkbox", "id": "bordered_grid", "label": "Bordered grid (1px cell dividers)", "default": true },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "label": "Header layout",
+      "options": [
+        { "value": "centered", "label": "Centered (shop all style)" },
+        { "value": "asymmetric", "label": "Asymmetric (collection style)" }
+      ],
+      "default": "asymmetric"
+    },
+    { "type": "text", "id": "default_description", "label": "Default description (when collection has none). Leave blank to use shop name.", "default": "" }
+  ]
+}
+{% endschema %}
