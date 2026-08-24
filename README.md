@@ -1,6 +1,6 @@
 # custom-theme
 
-A custom Shopify Online Store 2.0 theme built from the FITRA SHOP design references — a minimalist outdoor T-shirt brand aesthetic with editorial typography, hairline borders, and a high-key light-mode interface.
+A custom Shopify Online Store 2.0 theme built from the design references — a minimalist outdoor T-shirt brand aesthetic with editorial typography, hairline borders, and a high-key light-mode interface.
 
 ## Design language
 
@@ -109,8 +109,8 @@ Then in Shopify Admin: **Online Store → Themes → Add theme → Upload zip fi
 
 ## Reference
 
-This theme is an implementation of the FITRA SHOP design system documented in `reference/aura_earth/DESIGN.md` and the per-page references under `reference/`. The reference directory is the design source of truth and is not part of the theme itself.
+This theme is an implementation of the design system documented in `reference/aura_earth/DESIGN.md` and the per-page references under `reference/`. The reference directory is the design source of truth and is not part of the theme itself.
 
 ## License
 
-Custom theme for the FITRA SHOP storefront.
+Custom theme for the storefront.
