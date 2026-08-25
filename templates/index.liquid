@@ -27,9 +27,21 @@
     </div>
   </section>
 
-  {%- comment -%} ============ CATEGORIES ============ {%- endcomment -%}
-  {%- assign collections = collections | sort: 'title' -%}
-  {%- if collections.size > 0 -%}
+  {%- comment -%} ============ DETECT REAL CATEGORIES (exclude 'all' and 'frontpage') ============ {%- endcomment -%}
+  {%- assign real_collections = '' | split: '' -%}
+  {%- for col in collections -%}
+    {%- if col.handle != 'all' and col.handle != 'frontpage' -%}
+      {%- assign real_collections = real_collections | push: col -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign has_categories = false -%}
+  {%- if real_collections.size > 0 -%}{%- assign has_categories = true -%}{%- endif -%}
+
+  {%- assign all_products = collections.all.products | default: collections.first.products -%}
+
+  {%- comment -%} ============ CATEGORIES (only if real categories exist) ============ {%- endcomment -%}
+  {%- if has_categories -%}
+  {%- assign sorted_collections = real_collections | sort: 'title' -%}
   <section id="categories" style="padding: 80px 20px;">
     <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
       <div>
@@ -40,8 +52,7 @@
     </div>
 
     <div class="product-grid reveal-stagger" style="grid-template-columns: repeat(2, 1fr);">
-      {%- for col in collections limit: 4 -%}
-        {%- if col.handle != 'all' and col.handle != 'frontpage' -%}
+      {%- for col in sorted_collections limit: 4 -%}
         <a href="{{ col.url }}" class="pcard reveal" style="text-decoration:none; color:inherit; display:block;">
           <div class="pcard__media" style="aspect-ratio: 4/3;">
             {%- if col.image -%}
@@ -60,16 +71,14 @@
             <p class="pcard__price" style="color:#888;">{{ col.products_count }} PRODUCTS</p>
           </div>
         </a>
-        {%- endif -%}
       {%- endfor -%}
     </div>
   </section>
   {%- endif -%}
 
-  {%- comment -%} ============ NEW ARRIVALS (newest 4, no duplicate with best sellers) ============ {%- endcomment -%}
-  {%- assign all_products = collections.all.products | default: collections.first.products -%}
+  {%- comment -%} ============ NEW ARRIVALS (always show if products exist) ============ {%- endcomment -%}
   {%- if all_products.size > 0 -%}
-  <section style="padding: 0 20px 80px;">
+  <section style="padding: 80px 20px;">
     <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
       <div>
         <p style="font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#888; margin:0 0 8px;">FRESH DROPS</p>
@@ -87,30 +96,28 @@
   </section>
   {%- endif -%}
 
-  {%- comment -%} ============ BEST SELLERS (only if 5+ products, avoid duplicate) ============ {%- endcomment -%}
-  {%- if all_products.size > 4 -%}
-  <section style="padding: 0 20px 80px; background: #fafafa;">
-    <div style="padding: 80px 0 0;">
-      <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
-        <div>
-          <p style="font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#888; margin:0 0 8px;">TRENDING NOW</p>
-          <h2 style="font-family:'EB Garamond',serif; font-size:28px; line-height:1.2; color:#000; margin:0; font-weight:400; letter-spacing:-0.01em;">BEST SELLERS</h2>
-        </div>
-        <a href="{{ routes.all_products_collection_url }}?sort_by=best-selling" class="link-underline" style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#000; text-decoration:none;">VIEW ALL</a>
+  {%- comment -%} ============ BEST SELLERS (always show if products exist) ============ {%- endcomment -%}
+  {%- if all_products.size > 0 -%}
+  <section style="padding: 80px 20px; background: #fafafa;">
+    <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
+      <div>
+        <p style="font-family:'Geist',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#888; margin:0 0 8px;">TRENDING NOW</p>
+        <h2 style="font-family:'EB Garamond',serif; font-size:28px; line-height:1.2; color:#000; margin:0; font-weight:400; letter-spacing:-0.01em;">BEST SELLERS</h2>
       </div>
+      <a href="{{ routes.all_products_collection_url }}?sort_by=best-selling" class="link-underline" style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#000; text-decoration:none;">VIEW ALL</a>
+    </div>
 
-      <div class="product-grid reveal-stagger">
-        {%- assign sorted_best = all_products | sort: 'price' -%}
-        {%- for product in sorted_best limit: 4 -%}
-          {% render 'product-card-inline', product: product %}
-        {%- endfor -%}
-      </div>
+    <div class="product-grid reveal-stagger">
+      {%- assign sorted_best = all_products | sort: 'price' -%}
+      {%- for product in sorted_best limit: 4 -%}
+        {% render 'product-card-inline', product: product %}
+      {%- endfor -%}
     </div>
   </section>
   {%- endif -%}
 
-  {%- comment -%} ============ ALL PRODUCTS (only if 5+ products, avoid duplicate with new arrivals) ============ {%- endcomment -%}
-  {%- if all_products.size > 4 -%}
+  {%- comment -%} ============ ALL PRODUCTS (show when no categories, or always as full listing) ============ {%- endcomment -%}
+  {%- if all_products.size > 0 and has_categories == false -%}
   <section style="padding: 80px 20px;">
     <div class="reveal" style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #e5e5e5; padding-bottom:16px; margin-bottom:36px;">
       <div>

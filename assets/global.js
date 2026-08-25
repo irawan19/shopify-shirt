@@ -138,16 +138,53 @@
 
   window.Fitra = window.Fitra || {};
   window.Fitra.openCart = () => openDrawer('[data-cart-drawer]');
-  window.Fitra.openSearch = () => openDrawer('[data-search-drawer]');
   window.Fitra.closeDrawer = closeDrawer;
   window.Fitra.addToCart = addToCart;
   window.Fitra.refreshCart = refreshCartDrawer;
 
+  /* ---------- Inline header search toggle ---------- */
+  function toggleHeaderSearch(force) {
+    const wrap = document.querySelector('[data-header-search]');
+    if (!wrap) return;
+    const willOpen = force === undefined ? !wrap.classList.contains('is-open') : force;
+    wrap.classList.toggle('is-open', willOpen);
+    if (willOpen) {
+      const input = wrap.querySelector('.header__search-input');
+      if (input) setTimeout(() => input.focus(), 100);
+    }
+  }
+  function toggleMobileSearch(force) {
+    const bar = document.querySelector('[data-mobile-search-bar]');
+    if (!bar) return;
+    const willOpen = force === undefined ? bar.style.display === 'none' : force;
+    bar.style.display = willOpen ? 'block' : 'none';
+    if (willOpen) {
+      const input = bar.querySelector('input[type="search"]');
+      if (input) setTimeout(() => input.focus(), 100);
+    }
+  }
+  window.Fitra.toggleHeaderSearch = toggleHeaderSearch;
+  window.Fitra.toggleMobileSearch = toggleMobileSearch;
+
   document.addEventListener('click', (e) => {
     const opener = e.target.closest('[data-cart-open]');
     if (opener) { e.preventDefault(); window.Fitra.openCart(); return; }
-    const searchOpener = e.target.closest('[data-search-open]');
-    if (searchOpener) { e.preventDefault(); window.Fitra.openSearch(); return; }
+    const searchToggle = e.target.closest('[data-search-toggle]');
+    if (searchToggle) {
+      e.preventDefault();
+      if (searchToggle.closest('.header__mobile')) {
+        toggleMobileSearch();
+      } else {
+        toggleHeaderSearch();
+      }
+      return;
+    }
+    // Close inline search when clicking outside
+    const searchWrap = e.target.closest('[data-header-search]');
+    if (!searchWrap) {
+      const headerSearch = document.querySelector('[data-header-search]');
+      if (headerSearch) headerSearch.classList.remove('is-open');
+    }
     const closer = e.target.closest('[data-drawer-close]');
     if (closer) { closeDrawer(closer.closest('.drawer')); return; }
     const overlay = e.target.closest('.overlay');

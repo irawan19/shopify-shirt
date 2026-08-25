@@ -21,9 +21,16 @@
         </ul>
       </div>
       <div class="header__actions">
-        <button type="button" data-search-open aria-label="{{ 'accessibility.search' | t }}">
-          {% render 'icon', name: 'search' %}
-        </button>
+        <div class="header__search" data-header-search>
+          <button type="button" data-search-toggle aria-label="{{ 'accessibility.search' | t }}">
+            {% render 'icon', name: 'search' %}
+          </button>
+          <form action="{{ routes.search_url }}" method="get" role="search" class="header__search-form" data-search-form>
+            <input type="search" name="q" class="header__search-input" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" autocomplete="off">
+            <input type="hidden" name="type" value="product">
+            <button type="submit" aria-label="{{ 'accessibility.search' | t }}">{% render 'icon', name: 'search' %}</button>
+          </form>
+        </div>
         <a href="{{ routes.account_url }}" aria-label="{{ 'accessibility.account' | t }}">
           {% render 'icon', name: 'person' %}
         </a>
@@ -44,12 +51,24 @@
         {% render 'icon', name: 'menu' %}
       </button>
       <a href="{{ routes.root_url }}" class="header__logo font-heading">{{ shop.name }}</a>
-      <button type="button" data-cart-open aria-label="{{ 'accessibility.cart' | t }}" class="header__cart">
-        {% render 'icon', name: 'shopping_bag' %}
-        <span class="header__cart-count{% if cart.item_count == 0 %} is-hidden{% endif %}" data-cart-count-wrap>
-          <span data-cart-count>{{ cart.item_count }}</span>
-        </span>
-      </button>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <button type="button" data-search-toggle aria-label="{{ 'accessibility.search' | t }}">
+          {% render 'icon', name: 'search' %}
+        </button>
+        <button type="button" data-cart-open aria-label="{{ 'accessibility.cart' | t }}" class="header__cart">
+          {% render 'icon', name: 'shopping_bag' %}
+          <span class="header__cart-count{% if cart.item_count == 0 %} is-hidden{% endif %}" data-cart-count-wrap>
+            <span data-cart-count>{{ cart.item_count }}</span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="header__mobile-search" data-mobile-search-bar style="display:none; padding:0 20px 16px; border-bottom:1px solid var(--color-hairline);">
+      <form action="{{ routes.search_url }}" method="get" role="search" style="display:flex; align-items:center; gap:8px;">
+        <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" style="flex:1; border:1px solid var(--color-hairline); padding:10px 14px; font-size:14px; background:transparent;">
+        <input type="hidden" name="type" value="product">
+        <button type="submit" aria-label="{{ 'accessibility.search' | t }}">{% render 'icon', name: 'search' %}</button>
+      </form>
     </div>
   </nav>
 
@@ -73,7 +92,8 @@
         </ul>
         <div class="mobile-menu__search">
           <form action="{{ routes.search_url }}" method="get" role="search">
-            <input type="search" name="q" placeholder="Search..." aria-label="{{ 'accessibility.search' | t }}" class="mobile-menu__search-input">
+            <input type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'accessibility.search' | t }}" class="mobile-menu__search-input">
+            <input type="hidden" name="type" value="product">
             <button type="submit" aria-label="{{ 'accessibility.search' | t }}">{% render 'icon', name: 'search' %}</button>
           </form>
         </div>

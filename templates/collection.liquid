@@ -18,24 +18,24 @@
   <div class="collection-layout" style="display:grid; grid-template-columns:1fr; gap:0;">
 
     {%- comment -%} ===== SIDEBAR (left) ===== {%- endcomment -%}
-    <aside class="collection-sidebar" style="border-right:1px solid #e5e5e5; padding:32px 20px;">
+    <aside class="collection-sidebar" style="border-right:1px solid #e5e5e5; padding:32px 20px; overflow-x:hidden; box-sizing:border-box;">
 
-      {%- comment -%} Categories {%- endcomment -%}
-      <div class="sidebar-section" style="margin-bottom:40px;">
+      {%- comment -%} Categories — vertical list, no horizontal scroll {%- endcomment -%}
+      <div class="sidebar-section" style="margin-bottom:40px; overflow:hidden;">
         <h3 style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#000; margin:0 0 16px; padding-bottom:12px; border-bottom:1px solid #e5e5e5;">CATEGORIES</h3>
-        <ul style="list-style:none; padding:0; margin:0;">
-          <li style="margin-bottom:8px;">
-            <a href="{{ routes.all_products_collection_url }}" style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-family:'Geist',sans-serif; font-size:13px; color:{% if collection.handle == 'all' %}#000{% else %}#666{% endif %}; text-decoration:none; font-weight:{% if collection.handle == 'all' %}600{% else %}400{% endif %}; transition:color 0.2s ease;" onmouseover="this.style.color='#000'" onmouseout="if('{{ collection.handle }}'!=='all'){this.style.color='#666'}">
+        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:4px; overflow:hidden;">
+          <li>
+            <a href="{{ routes.all_products_collection_url }}" class="sidebar-cat-link{% if collection.handle == 'all' %} is-active{% endif %}" style="display:block; padding:8px 0; font-family:'Geist',sans-serif; font-size:13px; color:{% if collection.handle == 'all' %}#000{% else %}#666{% endif %}; text-decoration:none; font-weight:{% if collection.handle == 'all' %}600{% else %}400{% endif %}; transition:color 0.2s ease; white-space:normal; word-break:break-word;">
               <span>All Products</span>
-              <span style="font-family:'Geist Mono',monospace; font-size:11px; color:#999;">{{ collections.all.products_count }}</span>
+              <span style="font-family:'Geist Mono',monospace; font-size:11px; color:#999; margin-left:8px;">({{ collections.all.products_count }})</span>
             </a>
           </li>
           {%- for col in collections -%}
             {%- if col.handle != 'all' and col.handle != 'frontpage' -%}
-            <li style="margin-bottom:8px;">
-              <a href="{{ col.url }}" style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-family:'Geist',sans-serif; font-size:13px; color:{% if collection.handle == col.handle %}#000{% else %}#666{% endif %}; text-decoration:none; font-weight:{% if collection.handle == col.handle %}600{% else %}400{% endif %}; transition:color 0.2s ease;" onmouseover="this.style.color='#000'" onmouseout="if('{{ collection.handle }}'!=='{{ col.handle }}'){this.style.color='#666'}">
+            <li>
+              <a href="{{ col.url }}" class="sidebar-cat-link{% if collection.handle == col.handle %} is-active{% endif %}" style="display:block; padding:8px 0; font-family:'Geist',sans-serif; font-size:13px; color:{% if collection.handle == col.handle %}#000{% else %}#666{% endif %}; text-decoration:none; font-weight:{% if collection.handle == col.handle %}600{% else %}400{% endif %}; transition:color 0.2s ease; white-space:normal; word-break:break-word;">
                 <span>{{ col.title }}</span>
-                <span style="font-family:'Geist Mono',monospace; font-size:11px; color:#999;">{{ col.products_count }}</span>
+                <span style="font-family:'Geist Mono',monospace; font-size:11px; color:#999; margin-left:8px;">({{ col.products_count }})</span>
               </a>
             </li>
             {%- endif -%}
@@ -43,24 +43,21 @@
         </ul>
       </div>
 
-      {%- comment -%} Price Range {%- endcomment -%}
-      <div class="sidebar-section" style="margin-bottom:40px;">
+      {%- comment -%} Price Range — stacked min/max inputs (vertical) {%- endcomment -%}
+      <div class="sidebar-section" style="margin-bottom:40px; overflow:hidden;">
         <h3 style="font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:#000; margin:0 0 16px; padding-bottom:12px; border-bottom:1px solid #e5e5e5;">PRICE RANGE</h3>
-        {%- assign prices = collection.products | map: 'price' | sort -%}
-        {%- assign min_price = prices.first | default: 0 | money_without_currency -%}
-        {%- assign max_price = prices.last | default: 100000 | money_without_currency -%}
-        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-          <span style="font-family:'Geist Mono',monospace; font-size:11px; color:#666;">Min: <span id="price-min-display">{{ min_price }}</span></span>
-          <span style="font-family:'Geist Mono',monospace; font-size:11px; color:#666;">Max: <span id="price-max-display">{{ max_price }}</span></span>
-        </div>
-        <div style="position:relative; height:4px; background:#e5e5e5; border-radius:2px; margin:20px 0;">
-          <div id="price-range-bar" style="position:absolute; height:100%; background:#000; border-radius:2px; left:0%; right:0%;"></div>
-        </div>
-        <div style="display:flex; gap:12px; margin-top:16px;">
-          <input type="number" id="price-min" name="filter.v.price.gte" placeholder="Min" style="flex:1; padding:8px 12px; border:1px solid #e5e5e5; font-family:'Geist Mono',monospace; font-size:12px; color:#000; background:#fff;">
-          <input type="number" id="price-max" name="filter.v.price.lte" placeholder="Max" style="flex:1; padding:8px 12px; border:1px solid #e5e5e5; font-family:'Geist Mono',monospace; font-size:12px; color:#000; background:#fff;">
-        </div>
-        <button type="button" id="price-apply" style="width:100%; margin-top:12px; padding:10px; background:#000; color:#fff; border:none; font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:opacity 0.2s ease;">APPLY FILTER</button>
+        <form action="{{ collection.url }}" method="get" style="display:flex; flex-direction:column; gap:12px;">
+          {%- if collection.current_vendor != blank -%}<input type="hidden" name="filter.p.vendor" value="{{ collection.current_vendor }}">{%- endif -%}
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label for="price-min" style="font-family:'Geist Mono',monospace; font-size:11px; color:#666;">MIN PRICE</label>
+            <input type="number" id="price-min" name="filter.v.price.gte" placeholder="Min" min="0" step="0.01" style="width:100%; box-sizing:border-box; padding:8px 12px; border:1px solid #e5e5e5; font-family:'Geist Mono',monospace; font-size:12px; color:#000; background:#fff;">
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label for="price-max" style="font-family:'Geist Mono',monospace; font-size:11px; color:#666;">MAX PRICE</label>
+            <input type="number" id="price-max" name="filter.v.price.lte" placeholder="Max" min="0" step="0.01" style="width:100%; box-sizing:border-box; padding:8px 12px; border:1px solid #e5e5e5; font-family:'Geist Mono',monospace; font-size:12px; color:#000; background:#fff;">
+          </div>
+          <button type="submit" style="width:100%; padding:10px; background:#000; color:#fff; border:none; font-family:'Geist',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:opacity 0.2s ease;">APPLY FILTER</button>
+        </form>
       </div>
 
       {%- comment -%} Product Type Filter {%- endcomment -%}
@@ -164,15 +161,21 @@
 </main>
 
 <style>
+  /* Ensure sidebar never causes horizontal scroll */
+  .collection-sidebar { box-sizing: border-box; overflow-x: hidden; max-width: 100%; }
+  .collection-sidebar input[type="number"],
+  .collection-sidebar button { box-sizing: border-box; max-width: 100%; }
+  .sidebar-cat-link:hover { color: #000 !important; }
+
   /* Desktop: sidebar + products */
   @media (min-width: 1024px) {
-    .collection-layout { grid-template-columns: 260px 1fr !important; }
-    .collection-sidebar { position: sticky; top: 72px; height: fit-content; max-height: calc(100vh - 72px); overflow-y: auto; padding: 40px 24px !important; }
+    .collection-layout { grid-template-columns: 240px 1fr !important; }
+    .collection-sidebar { position: sticky; top: 72px; height: fit-content; max-height: calc(100vh - 72px); overflow-y: auto; overflow-x: hidden; padding: 40px 20px !important; }
     .collection-main { padding: 40px 48px !important; }
   }
   @media (min-width: 768px) and (max-width: 1023px) {
-    .collection-layout { grid-template-columns: 220px 1fr !important; }
-    .collection-sidebar { padding: 32px 16px !important; }
+    .collection-layout { grid-template-columns: 200px 1fr !important; }
+    .collection-sidebar { padding: 32px 12px !important; }
     .collection-main { padding: 32px 20px !important; }
   }
   /* Mobile: sidebar collapses above products */
@@ -192,21 +195,6 @@
       sortSelect.addEventListener('change', function() {
         var url = new URL(window.location.href);
         url.searchParams.set('sort_by', this.value);
-        window.location.href = url.toString();
-      });
-    }
-
-    // Price range apply
-    var priceApply = document.getElementById('price-apply');
-    if (priceApply) {
-      priceApply.addEventListener('click', function() {
-        var url = new URL(window.location.href);
-        var minVal = document.getElementById('price-min').value;
-        var maxVal = document.getElementById('price-max').value;
-        if (minVal) url.searchParams.set('filter.v.price.gte', minVal);
-        else url.searchParams.delete('filter.v.price.gte');
-        if (maxVal) url.searchParams.set('filter.v.price.lte', maxVal);
-        else url.searchParams.delete('filter.v.price.lte');
         window.location.href = url.toString();
       });
     }

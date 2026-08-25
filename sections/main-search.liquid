@@ -25,16 +25,6 @@
           {%- for item in search.results -%}
             {%- if item.object_type == 'product' -%}
               {% render 'product-card', product: item, show_swatches: true %}
-            {%- elsif item.object_type == 'article' -%}
-              <a href="{{ item.url }}" class="product-card">
-                <div class="product-card__media">
-                  {%- if item.article.image -%}
-                    <img src="{{ item.article.image | image_url: width: 600 }}" alt="{{ item.title | escape }}" loading="lazy">
-                  {%- endif -%}
-                </div>
-                <h3 class="product-card__title">{{ item.title }}</h3>
-                <p class="product-card__meta mono-ui">{{ item.article.published_at | date: '%b %Y' | upcase }}</p>
-              </a>
             {%- endif -%}
           {%- endfor -%}
         </div>
