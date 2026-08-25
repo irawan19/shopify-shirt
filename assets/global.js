@@ -42,7 +42,7 @@
     const items = cart.items.map((item) => {
       const img = item.image ? item.image : '';
       return `
-        <div class="cart-item" data-key="${item.key}" data-line="${item.index + 1}">
+        <div class="cart-item" data-key="${item.key}" data-line="${item.index}">
           <div class="cart-item__media">
             ${img ? `<img src="${img}" alt="${item.title}" width="96" height="128" loading="lazy">` : ''}
           </div>
@@ -90,14 +90,18 @@
     }
   }
 
-  async function changeLine(line, quantity) {
+  async function changeLine(key, quantity) {
     const res = await fetch(`${window.routes.cart_change_url}.js`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       credentials: 'same-origin',
-      body: JSON.stringify({ line: line, quantity: quantity })
+      body: JSON.stringify({ id: key, quantity: quantity })
     });
-    if (res.ok) { await refreshCartDrawer(); }
+    if (res.ok) {
+      await refreshCartDrawer();
+    } else {
+      console.error('Cart change failed:', await res.text().catch(() => ''));
+    }
   }
 
   async function addToCart(form) {
@@ -192,21 +196,21 @@
     const removeBtn = e.target.closest('[data-remove]');
     if (removeBtn) {
       const item = removeBtn.closest('.cart-item');
-      if (item) changeLine(parseInt(item.getAttribute('data-line'), 10), 0);
+      if (item) changeLine(item.getAttribute('data-key'), 0);
       return;
     }
     const qtyUp = e.target.closest('[data-qty-up]');
     if (qtyUp) {
       const item = qtyUp.closest('.cart-item');
       const val = qtyUp.closest('[data-qty]').querySelector('[data-qty-val]');
-      changeLine(parseInt(item.getAttribute('data-line'), 10), parseInt(val.textContent, 10) + 1);
+      changeLine(item.getAttribute('data-key'), parseInt(val.textContent, 10) + 1);
       return;
     }
     const qtyDown = e.target.closest('[data-qty-down]');
     if (qtyDown) {
       const item = qtyDown.closest('.cart-item');
       const val = qtyDown.closest('[data-qty]').querySelector('[data-qty-val]');
-      changeLine(parseInt(item.getAttribute('data-line'), 10), Math.max(parseInt(val.textContent, 10) - 1, 0));
+      changeLine(item.getAttribute('data-key'), Math.max(parseInt(val.textContent, 10) - 1, 0));
       return;
     }
   });
@@ -223,17 +227,12 @@
     if (!wrap) return;
     const form = e.target;
     const submitter = e.submitter;
-    const isBuyNow = submitter && submitter.hasAttribute('data-buy-now');
+    const btn = submitter && submitter.hasAttribute('data-buy-now') ? submitter : form.querySelector('[data-add-button]');
     e.preventDefault();
-    const btn = isBuyNow ? submitter : form.querySelector('[data-add-button]');
     if (btn) { btn.setAttribute('aria-busy', 'true'); btn.disabled = true; }
     addToCart(form)
       .then(() => {
-        if (isBuyNow) {
-          window.location.href = '/checkout';
-        } else {
-          window.Fitra.openCart();
-        }
+        window.Fitra.openCart();
       })
       .catch((err) => {
         const errEl = wrap.querySelector('[data-form-error]');

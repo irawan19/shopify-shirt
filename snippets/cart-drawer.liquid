@@ -39,7 +39,8 @@
 
     <div class="drawer__body cart-drawer__body" data-cart-drawer-body data-empty-text="{{ 'cart.general.empty' | t | upcase }}">
       {%- if cart.item_count == 0 -%}
-        <p class="mono-ui text-muted" style="text-align:center;padding:48px 0;">{{ 'cart.general.empty' | t | upcase }}</p>
+        <p class="mono-ui text-muted" style="text-align:center;padding:48px 0 16px;">{{ 'cart.general.empty' | t | upcase }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary btn--block" data-drawer-close>{{ 'cart.general.continue_shopping' | t | upcase }}</a>
       {%- else -%}
         {%- for item in cart.items -%}
           <div class="cart-item" data-key="{{ item.key }}" data-line="{{ forloop.index }}">
@@ -79,6 +80,7 @@
       <form action="{{ routes.cart_url }}" method="post" novalidate>
         <button type="submit" name="checkout" class="btn btn--primary btn--block">{{ 'cart.general.checkout' | t }}</button>
       </form>
+      <a href="{{ routes.cart_url }}" class="cart-drawer__view-cart label-caps text-muted" data-drawer-close>{{ 'cart.general.title' | t | upcase }} &rarr;</a>
     </div>
   </aside>
 </div>
