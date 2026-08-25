@@ -133,11 +133,16 @@
   }
   function closeDrawer(drawer) {
     if (!drawer) return;
-    const overlay = drawer.querySelector('.overlay');
     drawer.classList.remove('is-open');
-    if (overlay) overlay.classList.remove('is-active');
     document.body.classList.remove('drawer-open');
     drawer.setAttribute('aria-hidden', 'true');
+    // Find associated overlay (external or internal)
+    var selector = null;
+    if (drawer.hasAttribute('data-cart-drawer')) selector = '[data-cart-drawer]';
+    else if (drawer.hasAttribute('data-mobile-menu')) selector = '[data-mobile-menu]';
+    var overlay = drawer.querySelector('.overlay');
+    if (!overlay && selector) overlay = document.querySelector('[data-overlay-for="' + selector + '"]');
+    if (overlay) overlay.classList.remove('is-active');
   }
 
   window.Fitra = window.Fitra || {};
@@ -190,9 +195,27 @@
       if (headerSearch) headerSearch.classList.remove('is-open');
     }
     const closer = e.target.closest('[data-drawer-close]');
-    if (closer) { closeDrawer(closer.closest('.drawer')); return; }
+    if (closer) {
+      const drawer = closer.closest('.drawer') || closer.closest('[data-mobile-menu]');
+      if (drawer) closeDrawer(drawer);
+      else {
+        // External overlay close
+        const menu = document.querySelector('[data-mobile-menu]');
+        if (menu && menu.classList.contains('is-open')) closeDrawer(menu);
+        else { const cd = document.querySelector('[data-cart-drawer]'); if (cd) closeDrawer(cd); }
+      }
+      return;
+    }
     const overlay = e.target.closest('.overlay');
-    if (overlay) { closeDrawer(overlay.closest('.drawer')); return; }
+    if (overlay) {
+      const drawer = overlay.closest('.drawer') || overlay.closest('[data-mobile-menu]');
+      if (drawer) closeDrawer(drawer);
+      else {
+        const forAttr = overlay.getAttribute('data-overlay-for');
+        if (forAttr) { const target = document.querySelector(forAttr); if (target) closeDrawer(target); }
+      }
+      return;
+    }
     const removeBtn = e.target.closest('[data-remove]');
     if (removeBtn) {
       const item = removeBtn.closest('.cart-item');
@@ -218,6 +241,10 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       document.querySelectorAll('.drawer.is-open').forEach(closeDrawer);
+      const headerSearch = document.querySelector('[data-header-search]');
+      if (headerSearch) headerSearch.classList.remove('is-open');
+      const mobileBar = document.querySelector('[data-mobile-search-bar]');
+      if (mobileBar) mobileBar.style.display = 'none';
     }
   });
 
@@ -338,13 +365,25 @@
     const opener = e.target.closest('[data-menu-open]');
     if (opener) {
       const menu = document.querySelector('[data-mobile-menu]');
-      if (menu) { menu.classList.add('is-open'); document.body.classList.add('drawer-open'); menu.setAttribute('aria-hidden','false'); }
+      if (menu) {
+        menu.classList.add('is-open');
+        document.body.classList.add('drawer-open');
+        menu.setAttribute('aria-hidden','false');
+        const ov = document.querySelector('[data-overlay-for="[data-mobile-menu]"]');
+        if (ov) ov.classList.add('is-active');
+      }
       return;
     }
     const closer = e.target.closest('[data-menu-close]');
     if (closer) {
       const menu = document.querySelector('[data-mobile-menu]');
-      if (menu) { menu.classList.remove('is-open'); document.body.classList.remove('drawer-open'); menu.setAttribute('aria-hidden','true'); }
+      if (menu) {
+        menu.classList.remove('is-open');
+        document.body.classList.remove('drawer-open');
+        menu.setAttribute('aria-hidden','true');
+        const ov = document.querySelector('[data-overlay-for="[data-mobile-menu]"]');
+        if (ov) ov.classList.remove('is-active');
+      }
       return;
     }
   });

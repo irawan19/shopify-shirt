@@ -22,14 +22,14 @@
       </div>
       <div class="header__actions">
         <div class="header__search" data-header-search>
-          <button type="button" data-search-toggle aria-label="{{ 'accessibility.search' | t }}">
-            {% render 'icon', name: 'search' %}
-          </button>
           <form action="{{ routes.search_url }}" method="get" role="search" class="header__search-form" data-search-form>
             <input type="search" name="q" class="header__search-input" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" autocomplete="off">
             <input type="hidden" name="type" value="product">
             <button type="submit" aria-label="{{ 'accessibility.search' | t }}">{% render 'icon', name: 'search' %}</button>
           </form>
+          <button type="button" data-search-toggle aria-label="{{ 'accessibility.search' | t }}" class="header__search-icon">
+            {% render 'icon', name: 'search' %}
+          </button>
         </div>
         <a href="{{ routes.account_url }}" aria-label="{{ 'accessibility.account' | t }}">
           {% render 'icon', name: 'person' %}
@@ -73,8 +73,8 @@
   </nav>
 
   {%- comment -%} Mobile menu drawer {%- endcomment -%}
+  <div class="overlay" data-menu-close data-overlay-for="[data-mobile-menu]"></div>
   <div class="mobile-menu" data-mobile-menu aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menu">
-    <div class="overlay" data-menu-close></div>
     <aside class="mobile-menu__panel">
       <div class="mobile-menu__head">
         <a href="{{ routes.root_url }}" class="font-heading header__logo">{{ shop.name }}</a>
